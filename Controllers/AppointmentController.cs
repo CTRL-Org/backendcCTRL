@@ -1,15 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using YourNamespace.Services;
-using YourNamespace.Models;
+// using YourNamespace.Models;
 
 [ApiController]
 [Route("api/[controller]")]
 public class AppointmentController : ControllerBase
 {
-    private readonly IAppointmentService _appointmentService;
+    // private readonly IAppointmentService _appointmentService;
 
     // Inject the service via constructor
-    public AppointmentController(IAppointmentService appointmentService)
+    // public AppointmentController(IAppointmentService appointmentService)
     {
         _appointmentService = appointmentService;
     }

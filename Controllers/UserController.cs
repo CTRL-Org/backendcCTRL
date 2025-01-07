@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using YourAppNamespace.Services.Interfaces;
-using YourAppNamespace.Models.DTOs; // Adjust based on your project namespace
+
 using YourAppNamespace.Models; // Adjust for models like User
 
 namespace YourAppNamespace.Controllers
