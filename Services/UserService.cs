@@ -1,10 +1,10 @@
 // need to create service 
 
-using YourNamespace.Models;
-using YourNamespace.Services.Interfaces;
-using YourNamespace.Data;
+using CTRL.Models;
+using CTRL.Services.Interfaces;
+using CTRL.Data;
 
-namespace YourNamespace.Services
+namespace CTRL.Services
 {
     public class UserService : IUserService
     {

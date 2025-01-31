@@ -1,5 +1,7 @@
+using CTRL.Data;
+using CTRL.Services;
+using CTRL.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using YourNamespace.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

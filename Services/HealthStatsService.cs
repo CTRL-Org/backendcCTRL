@@ -1,11 +1,10 @@
 // need to define interface for service
 
+using CTRL.Models;
+using CTRL.Services.Interfaces;
+using CTRL.Data;
 
-using YourNamespace.Models;
-using YourNamespace.Services.Interfaces;
-using YourNamespace.Data;
-
-namespace YourNamespace.Services
+namespace CTRL.Services
 {
     public class HealthStatsService : IHealthStatsService
     {

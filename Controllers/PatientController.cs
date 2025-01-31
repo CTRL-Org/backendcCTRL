@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using YourNamespace.Services;
-using YourNamespace.Models;
+using CTRL.Services;
+using CTRL.Models;
 
 [ApiController]
 [Route("api/[controller]")]
