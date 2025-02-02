@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 namespace Backend.DataAccess
+using CTRL.Models;
 {
     public class AppDbContext : DbContext
     {

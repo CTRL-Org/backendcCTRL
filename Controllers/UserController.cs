@@ -1,9 +1,8 @@
+using CTRL.Models;
+using CTRL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using YourAppNamespace.Services.Interfaces;
 
-using YourAppNamespace.Models; // Adjust for models like User
-
-namespace YourAppNamespace.Controllers
+namespace CTRL.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

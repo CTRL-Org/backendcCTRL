@@ -1,8 +1,7 @@
+using CTRL.Data;
+using CTRL.Services;
+using CTRL.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using HealthTrackerApp.Data;
-using HealthTrackerApp.Services;
-using HealthTrackerApp.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
