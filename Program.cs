@@ -1,36 +1,40 @@
 using Microsoft.EntityFrameworkCore;
-using YourNamespace.Services;
+using Microsoft.OpenApi.Models;
+using HealthTrackerApp.Data;
+using HealthTrackerApp.Services;
+using HealthTrackerApp.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Register DbContext with the connection string (replace with your actual connection string).
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register UserService as a scoped service.
+// Register application services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IHealthStatsService, HealthStatsService>();
 
-// Add controllers and endpoints.
+// Add controllers and endpoints
 builder.Services.AddControllers();
 
-// Learn more about configuring OpenAPI/Swagger.
+// Configure Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "HealthTracker API", Version = "v1" });
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HealthTracker API v1"));
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
