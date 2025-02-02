@@ -1,10 +1,8 @@
-// need to define interface for service
+using backendcCTRL.Data;  // Ensure correct namespace
+using backendcCTRL.Models;
+using backendcCTRL.Services.Interfaces;
 
-using CTRL.Models;
-using CTRL.Services.Interfaces;
-using CTRL.Data;
-
-namespace CTRL.Services
+namespace backendcCTRL.Services
 {
     public class HealthStatsService : IHealthStatsService
     {

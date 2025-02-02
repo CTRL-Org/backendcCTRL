@@ -1,15 +1,15 @@
+using backendcCTRL.DTOs;
+using backendcCTRL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using YourNamespace.Services;
-// using YourNamespace.Models;
 
 [ApiController]
 [Route("api/[controller]")]
 public class AppointmentController : ControllerBase
 {
-    // private readonly IAppointmentService _appointmentService;
+    private readonly IAppointmentService _appointmentService;
 
-    // Inject the service via constructor
-    // public AppointmentController(IAppointmentService appointmentService)
+    // Constructor
+    public AppointmentController(IAppointmentService appointmentService)
     {
         _appointmentService = appointmentService;
     }
@@ -19,7 +19,7 @@ public class AppointmentController : ControllerBase
     public IActionResult GetAllAppointments()
     {
         var appointments = _appointmentService.GetAllAppointments();
-        return Ok(appointments); // Returns HTTP 200 with the list of appointments
+        return Ok(appointments);
     }
 
     // GET: api/Appointment/{id}
@@ -29,7 +29,7 @@ public class AppointmentController : ControllerBase
         var appointment = _appointmentService.GetAppointmentById(id);
         if (appointment == null)
         {
-            return NotFound(); // Returns HTTP 404 if not found
+            return NotFound();
         }
         return Ok(appointment);
     }
@@ -40,7 +40,7 @@ public class AppointmentController : ControllerBase
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState); // Returns HTTP 400 for validation errors
+            return BadRequest(ModelState);
         }
 
         var createdAppointment = _appointmentService.CreateAppointment(appointment);
@@ -75,6 +75,6 @@ public class AppointmentController : ControllerBase
             return NotFound();
         }
 
-        return NoContent(); // Returns HTTP 204 on successful deletion
+        return NoContent();
     }
 }

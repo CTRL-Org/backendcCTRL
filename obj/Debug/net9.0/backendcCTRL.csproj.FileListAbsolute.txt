@@ -1,0 +1,8 @@
+C:\Users\User\backendcCTRL\obj\Debug\net9.0\backendcCTRL.csproj.AssemblyReference.cache
+C:\Users\User\backendcCTRL\obj\Debug\net9.0\backendcCTRL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\backendcCTRL\obj\Debug\net9.0\backendcCTRL.AssemblyInfoInputs.cache
+C:\Users\User\backendcCTRL\obj\Debug\net9.0\backendcCTRL.AssemblyInfo.cs
+C:\Users\User\backendcCTRL\obj\Debug\net9.0\backendcCTRL.csproj.CoreCompileInputs.cache
+C:\Users\User\backendcCTRL\obj\Debug\net9.0\backendcCTRL.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\User\backendcCTRL\obj\Debug\net9.0\backendcCTRL.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\User\backendcCTRL\obj\Debug\net9.0\backendcCTRL.sourcelink.json

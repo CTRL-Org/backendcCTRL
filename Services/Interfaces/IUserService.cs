@@ -1,6 +1,6 @@
-using CTRL.Models;
+using backendcCTRL.Models;
 
-namespace CTRL.Services.Interfaces
+namespace backendcCTRL.Services.Interfaces
 {
     public interface IUserService
     {

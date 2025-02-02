@@ -1,5 +1,5 @@
-using CTRL.Models;
-using CTRL.Services.Interfaces;
+using backendcCTRL.DTOs;
+using backendcCTRL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CTRL.Controllers

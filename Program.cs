@@ -1,6 +1,6 @@
-using CTRL.Data;
-using CTRL.Services;
-using CTRL.Services.Interfaces;
+using backendcCTRL.Data;
+using backendcCTRL.Services;
+using backendcCTRL.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

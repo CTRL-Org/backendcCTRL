@@ -1,6 +1,6 @@
+using backendcCTRL.DTOs;
+using backendcCTRL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using YourNamespace.Services;
-// using YourNamespace.Models;
 
 [ApiController]
 [Route("api/[controller]")]

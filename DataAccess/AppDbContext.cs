@@ -1,12 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-namespace Backend.DataAccess
-using CTRL.Models;
+using backendcCTRL.Models;
+
+
+namespace Backend.DataAccess  // Namespace should be properly structured
 {
     public class AppDbContext : DbContext
     {
-        // Constructor that uses the DbContextOptions
+        // Constructor that takes DbContext options
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-        // DbSets for each table in your database
+
+        // DbSets - tables in the database
         public DbSet<User> Users { get; set; }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
