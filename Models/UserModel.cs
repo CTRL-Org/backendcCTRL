@@ -1,4 +1,10 @@
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+
+namespace backendcCTRL.Models
+{
 
 public class User
 {
@@ -23,4 +29,5 @@ public class User
 
     [StringLength(15)]
     public string PhoneNumber { get; set; }
+}
 }

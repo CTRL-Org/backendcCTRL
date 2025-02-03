@@ -2,11 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using backendcCTRL.Models;
 
 
-namespace Backend.DataAccess  // Namespace should be properly structured
+namespace backendcCTRL.DataAccess  
 {
     public class AppDbContext : DbContext
     {
-        // Constructor that takes DbContext options
+        
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         // DbSets - tables in the database

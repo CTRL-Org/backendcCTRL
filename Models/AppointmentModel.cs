@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CTRL.Models 
+namespace backendcCTRL.Models 
 
 {
     public class Appointment
@@ -17,7 +17,7 @@ namespace CTRL.Models
         public Patient Patient { get; set; }
 
         // [Required]
-        // public int ProviderID { get; set; } // Assuming Provider is another model
+        // public int ProviderID { get; set; } 
 
         // public Provider Provider { get; set; }
 

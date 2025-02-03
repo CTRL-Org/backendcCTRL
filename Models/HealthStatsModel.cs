@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace backendcCTRL.Models 
+{
     public class HealthStats
     {
         [Key]
@@ -27,3 +28,4 @@ namespace backendcCTRL.Models
         [Required]
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
     }
+}
