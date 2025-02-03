@@ -2,7 +2,7 @@ namespace backendcCTRL.DTOs
 {
     public class UpdateEmailDto
     {
-        public int UserId { get; set; }  
-        public string NewEmail { get; set; }  
+        public required int UserId { get; set; }  
+        public required string NewEmail { get; set; }  
     }
 }

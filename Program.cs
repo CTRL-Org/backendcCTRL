@@ -2,6 +2,9 @@ using backendcCTRL.DataAccess;
 using backendcCTRL.Services;
 using backendcCTRL.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

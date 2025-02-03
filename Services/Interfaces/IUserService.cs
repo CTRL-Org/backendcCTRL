@@ -10,5 +10,10 @@ namespace backendcCTRL.Services.Interfaces
         User UpdateUser(User user);
         bool DeleteUser(int id);
         User Authenticate(string username, string password);
+        
+
+        User RegisterUser(User user, string password);
+        bool UpdateEmail(int userId, string newEmail);
+        bool UpdatePhoneNumber(int userId, string newPhoneNumber);
     }
 }

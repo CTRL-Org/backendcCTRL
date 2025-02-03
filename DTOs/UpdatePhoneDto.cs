@@ -2,7 +2,7 @@ namespace backendcCTRL.DTOs
 {
     public class UpdatePhoneDto
     {
-        public int UserId { get; set; }  
-        public string NewPhoneNumber { get; set; }  
+        public required int UserId { get; set; }  
+        public required string NewPhoneNumber { get; set; }  
     }
 }
