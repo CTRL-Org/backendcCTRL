@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using backendcCTRL.DTOs;
+// using UpdatePasswordDto = backendcCTRL.DTOs.UpdatePasswordDto;
 using backendcCTRL.Services.Interfaces;
-using backendcCTRL.Models; 
+using backendcCTRL.Models;
+using backendcCTRL.DTOs;
 
 namespace back.Controllers
 {
@@ -24,11 +25,13 @@ namespace back.Controllers
         [HttpPost("register")]
         public IActionResult RegisterUser([FromBody] UserRegistrationDto user)
         {
-            var result = _userService.RegisterUser(user);
-            if (result.Success)
-                return Ok(result); // Return success response
-            return BadRequest(result.Message); // Return error response
+            var (success, message) = _userService.RegisterUser(user);
+            if (success)
+                return Ok(new { message });
+
+            return BadRequest(new { message });
         }
+
 
         // 2. Login Endpoint
         /// <summary>
@@ -37,49 +40,57 @@ namespace back.Controllers
         [HttpPost("login")]
         public IActionResult LoginUser([FromBody] UserLoginDto user)
         {
-            var result = _userService.Authenticate(user);
-            if (result != null)
-                return Ok(result); // Return authenticated user info
-            return Unauthorized("Invalid username or password."); // Return unauthorized response
+            var authenticatedUser = _userService.Authenticate(user);
+            if (authenticatedUser != null)
+                return Ok(authenticatedUser);
+
+            return Unauthorized(new { message = "Invalid username or password." });
         }
+
 
         // 3. Update Email Endpoint
         /// <summary>
         /// Updates the email address of the logged-in user.
         /// </summary>
-        [HttpPut("update-email")]
-        public IActionResult UpdateEmail([FromBody] UpdateEmailDto emailUpdate)
-        {
-            var result = _userService.UpdateEmail(emailUpdate);
-            if (result.Success)
-                return Ok(result.Message); // Return success response
-            return BadRequest(result.Message); // Return error response
-        }
+    [HttpPut("update-email")]
+    public IActionResult UpdateEmail([FromBody] UpdateEmailDto emailUpdate)
+    {
+        var (success, message) = _userService.UpdateEmail(emailUpdate);
+        if (success)
+            return Ok(new { message });
+
+        return BadRequest(new { message });
+    }
+
 
         // 4. Update Phone Number Endpoint
         /// <summary>
         /// Updates the phone number of the logged-in user.
         /// </summary>
-        [HttpPut("update-phone")]
-        public IActionResult UpdatePhone([FromBody] UpdatePhoneDto phoneUpdate)
-        {
-            var result = _userService.UpdatePhoneNumber(phoneUpdate);
-            if (result.Success)
-                return Ok(result.Message); // Return success response
-            return BadRequest(result.Message); // Return error response
-        }
+    [HttpPut("update-phone")]
+    public IActionResult UpdatePhone([FromBody] UpdatePhoneDto phoneUpdate)
+    {
+        var (success, message) = _userService.UpdatePhoneNumber(phoneUpdate);
+        if (success)
+            return Ok(new { message });
+
+        return BadRequest(new { message });
+    }
+
 
         // 5. Update Password Endpoint
         /// <summary>
         /// Updates the password of the logged-in user.
         /// </summary>
-        [HttpPut("update-password")]
-        public IActionResult UpdatePassword([FromBody] UpdatePasswordDto passwordUpdate)
-        {
-            var result = _userService.UpdatePassword(passwordUpdate);
-            if (result.Success)
-                return Ok(result.Message); // Return success response
-            return BadRequest(result.Message); // Return error response
-        }
+    [HttpPut("update-password")]
+    public IActionResult UpdatePassword([FromBody] UpdatePasswordDto passwordUpdate)
+    {
+        var (success, message) = _userService.UpdatePassword(passwordUpdate);
+        if (success)
+            return Ok(new { message });
+
+        return BadRequest(new { message });
+    }
+
     }
 }

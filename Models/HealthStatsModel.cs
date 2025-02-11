@@ -15,15 +15,15 @@ namespace backendcCTRL.Models
         [ForeignKey("Patient")]
         public int PatientID { get; set; }
 
-        public Patient Patient { get; set; }
+        public required Patient Patient { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string DataType { get; set; }
+        public required string DataType { get; set; }
 
         [Required]
         [StringLength(255)]
-        public string Value { get; set; }
+        public required string Value { get; set; }
 
         [Required]
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;

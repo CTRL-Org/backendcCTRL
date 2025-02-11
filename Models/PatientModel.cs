@@ -15,21 +15,21 @@ public class Patient
     [ForeignKey("User")]
     public int UserID { get; set; }
 
-    public User User { get; set; }
+    public required User User { get; set; }
 
     [Required]
     [StringLength(100)]
-    public string FullName { get; set; }
+    public required string FullName { get; set; }
 
     [Required]
     public DateTime DateOfBirth { get; set; }
 
     [Required]
     [StringLength(10)]
-    public string Gender { get; set; }
+    public required string Gender { get; set; }
 
     [Required]
     [StringLength(20)]
-    public string IDNumber { get; set; }
+    public required string IDNumber { get; set; }
 }
 }

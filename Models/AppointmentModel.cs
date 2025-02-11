@@ -14,7 +14,7 @@ namespace backendcCTRL.Models
         [ForeignKey("Patient")]
         public int PatientID { get; set; }
 
-        public Patient Patient { get; set; }
+        public required Patient Patient { get; set; }
 
         // [Required]
         // public int ProviderID { get; set; } 
@@ -25,10 +25,10 @@ namespace backendcCTRL.Models
         public DateTime DateTime { get; set; }
 
         [Required]
-        public string Reason { get; set; }
+        public required string Reason { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string Status { get; set; }
+        public required string Status { get; set; }
     }
 }
