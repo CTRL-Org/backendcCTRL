@@ -20,7 +20,12 @@ namespace backendcCTRL.Services
 
         public HealthStats GetHealthStatById(int id)
         {
-            return _context.HealthStats.FirstOrDefault(h => h.StatID == id);
+            var healthStat = _context.HealthStats.FirstOrDefault(h => h.StatID == id);
+            if (healthStat == null)
+            {
+                throw new KeyNotFoundException($"HealthStat with ID {id} not found.");
+            }
+            return healthStat;
         }
 
         public HealthStats CreateHealthStat(HealthStats healthStats)

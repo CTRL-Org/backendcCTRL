@@ -1,5 +1,6 @@
 using backendcCTRL.DataAccess;
 using backendcCTRL.Models;
+using backendcCTRL.DTOs;
 using backendcCTRL.Services.Interfaces;
 using System.Linq;
 
@@ -21,7 +22,7 @@ namespace backendcCTRL.Services
 
         public User GetUserById(int id)
         {
-            return _context.Users.FirstOrDefault(u => u.UserID == id);
+            return _context.Users.FirstOrDefault(u => u.UserID == id)!;
         }
 
         public User CreateUser(User user)
@@ -47,7 +48,6 @@ namespace backendcCTRL.Services
             return existingUser;
         }
 
-
         public (bool Success, string Message) UpdatePassword(UpdatePasswordDto passwordDto)
         {
             var user = _context.Users.Find(passwordDto.UserId);
@@ -59,8 +59,6 @@ namespace backendcCTRL.Services
 
             return (true, "Password updated successfully.");
         }
-
-
 
         public bool DeleteUser(int id)
         {
@@ -75,25 +73,24 @@ namespace backendcCTRL.Services
 
         public User Authenticate(string username, string password)
         {
-            return _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
+            return _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password)!;
         }
 
-        // Implementing the missing methods
+public (bool Success, string Message) RegisterUser(UserRegistrationDto userDto)
+{
+    var newUser = new User
+    {
+        Username = userDto.Username,
+        Email = userDto.Email,
+        Password = userDto.Password,
+        Role = userDto.Role 
+    };
 
-        public (bool Success, string Message) RegisterUser(UserRegistrationDto userDto)
-        {
-            var newUser = new User
-            {
-                Username = userDto.Username,
-                Email = userDto.Email,
-                Password = userDto.Password
-            };
+    _context.Users.Add(newUser);
+    _context.SaveChanges();
 
-            _context.Users.Add(newUser);
-            _context.SaveChanges();
-
-            return (true, "User registered successfully.");
-        }
+    return (true, "User registered successfully.");
+}
 
 
         public (bool Success, string Message) UpdateEmail(UpdateEmailDto emailDto)
@@ -118,6 +115,11 @@ namespace backendcCTRL.Services
             _context.SaveChanges();
 
             return (true, "Phone number updated successfully.");
+        }
+
+        public User Authenticate(UserLoginDto loginDto)
+        {
+            return _context.Users.FirstOrDefault(u => u.Username == loginDto.Username && u.Password == loginDto.Password);
         }
 
     }

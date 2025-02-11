@@ -36,16 +36,17 @@ namespace back.Controllers
         // 2. Login Endpoint
         /// <summary>
         /// Authenticates a user and returns their details if successful.
-        /// </summary>
+                /// </summary>
         [HttpPost("login")]
-        public IActionResult LoginUser([FromBody] UserLoginDto user)
+        public IActionResult LoginUser([FromBody] UserLoginDto loginRequest)
         {
-            var authenticatedUser = _userService.Authenticate(user);
-            if (authenticatedUser != null)
-                return Ok(authenticatedUser);
+            var result = _userService.Authenticate(loginRequest.Username, loginRequest.Password);
+            if (result != null)
+                return Ok(result);
 
-            return Unauthorized(new { message = "Invalid username or password." });
+            return Unauthorized("Invalid username or password.");
         }
+
 
 
         // 3. Update Email Endpoint
