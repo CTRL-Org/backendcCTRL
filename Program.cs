@@ -3,8 +3,6 @@ using backendcCTRL.Services;
 using backendcCTRL.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +27,14 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
+// call seeder for data **
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    DataSeeder.Seed(dbContext);  
+}
+
+//  HTTP request pipeline confoig
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
