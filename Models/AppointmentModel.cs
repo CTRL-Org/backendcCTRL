@@ -2,8 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace backendcCTRL.Models 
-
+namespace backendcCTRL.Models
 {
     public class Appointment
     {
@@ -11,24 +10,19 @@ namespace backendcCTRL.Models
         public int AppointmentID { get; set; }
 
         [Required]
-        [ForeignKey("Patient")]
-        public int PatientID { get; set; }
+        public int PatientID { get; set; } 
 
-        public required Patient Patient { get; set; }
-
-        // [Required]
-        // public int ProviderID { get; set; } 
-
-        // public Provider Provider { get; set; }
+        [ForeignKey("PatientID")]
+        public Patient Patient { get; set; } = null!; 
 
         [Required]
         public DateTime DateTime { get; set; }
 
         [Required]
-        public required string Reason { get; set; }
+        public string Reason { get; set; } = null!;
 
         [Required]
         [StringLength(50)]
-        public required string Status { get; set; }
+        public string Status { get; set; } = null!;
     }
 }
