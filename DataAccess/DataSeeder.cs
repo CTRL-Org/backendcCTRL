@@ -9,9 +9,9 @@ public class DataSeeder
 {
     public static void Seed(AppDbContext context)
     {
-        if (!context.Users.Any())  // Avoid duplicate seeding
+        if (!context.Users.Any())  // To Avoid duplicate seeding
         {
-            var user = new User { Username = "testuser", Email = "test@example.com", PasswordHash = "hashedpassword" };
+            var user = new User { Username = "testuser", Email = "test@example.com", Password = "hashedpassword",Role="Admin" };
             context.Users.Add(user);
             context.SaveChanges();
 
@@ -27,7 +27,7 @@ public class DataSeeder
             context.HealthStats.Add(healthStat);
             context.SaveChanges();
 
-            Console.WriteLine("✅ Test data inserted successfully!");
+            Console.WriteLine("Test data inserted successfully!");
         }
         else
         {
