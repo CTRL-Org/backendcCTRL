@@ -49,7 +49,7 @@ namespace backendcCTRL.Migrations
 
                     b.HasIndex("PatientID");
 
-                    b.ToTable("Appointment", (string)null);
+                    b.ToTable("appointment", (string)null);
                 });
 
             modelBuilder.Entity("backendcCTRL.Models.HealthStats", b =>
@@ -69,6 +69,7 @@ namespace backendcCTRL.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Timestamp")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Value")
@@ -80,7 +81,7 @@ namespace backendcCTRL.Migrations
 
                     b.HasIndex("PatientID");
 
-                    b.ToTable("HealthStats", (string)null);
+                    b.ToTable("healthstats", (string)null);
                 });
 
             modelBuilder.Entity("backendcCTRL.Models.Patient", b =>
@@ -116,16 +117,14 @@ namespace backendcCTRL.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Patient", (string)null);
+                    b.ToTable("patient", (string)null);
                 });
 
             modelBuilder.Entity("backendcCTRL.Models.User", b =>
                 {
                     b.Property<int>("UserID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserID"));
+                        .HasColumnType("integer")
+                        .HasColumnName("userid");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -153,7 +152,7 @@ namespace backendcCTRL.Migrations
 
                     b.HasKey("UserID");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("user", (string)null);
                 });
 
             modelBuilder.Entity("backendcCTRL.Models.Appointment", b =>

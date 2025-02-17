@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using backendcCTRL.Models;
 
-namespace backendcCTRL.DataAccess 
+namespace backendcCTRL.DataAccess
 {
     public class AppDbContext : DbContext
     {
@@ -16,32 +16,41 @@ namespace backendcCTRL.DataAccess
         {
             base.OnModelCreating(modelBuilder);
 
-            // table names match PostgreSQL naming conventions
-            modelBuilder.Entity<User>().ToTable("User");
-            modelBuilder.Entity<Patient>().ToTable("Patient");
-            modelBuilder.Entity<Appointment>().ToTable("Appointment");
-            modelBuilder.Entity<HealthStats>().ToTable("HealthStats");
+            // Table naming to match PostgreSQL schema
+            modelBuilder.Entity<User>().ToTable("user");
+            modelBuilder.Entity<Patient>().ToTable("patient");
+            modelBuilder.Entity<Appointment>().ToTable("appointment");
+            modelBuilder.Entity<HealthStats>().ToTable("healthstats");
+
+            // User Table Configuration
+            modelBuilder.Entity<User>()
+                .HasKey(u => u.UserID);
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.UserID)
+                .HasColumnName("userid")
+                .ValueGeneratedNever(); 
 
             // Patient -> User (One-to-One)
             modelBuilder.Entity<Patient>()
                 .HasOne(p => p.User)
-                .WithMany()  // Assuming one User can have multiple Patients
+                .WithMany()  
                 .HasForeignKey(p => p.UserID)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent accidental deletions
+                .OnDelete(DeleteBehavior.Restrict); 
 
             // Patient -> Appointments (One-to-Many)
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Patient)
-                .WithMany(p => p.Appointments) // Each patient can have multiple appointments
+                .WithMany(p => p.Appointments)
                 .HasForeignKey(a => a.PatientID)
-                .OnDelete(DeleteBehavior.Cascade); // If Patient is deleted, remove Appointments
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Patient -> HealthStats (One-to-Many)
             modelBuilder.Entity<HealthStats>()
                 .HasOne(h => h.Patient)
-                .WithMany(p => p.HealthStats) // Each patient can have multiple health records
+                .WithMany(p => p.HealthStats)
                 .HasForeignKey(h => h.PatientID)
-                .OnDelete(DeleteBehavior.Cascade); // If Patient is deleted, remove HealthStats
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

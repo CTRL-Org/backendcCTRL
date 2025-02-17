@@ -22,19 +22,23 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "HealthTracker API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "CTRL API", Version = "v1" });
 });
 
 var app = builder.Build();
 
-// call seeder for data **
+// Call seeder for data **(Ensure the database exists before running this)**
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    // **Commented out the automatic migration**
+    // dbContext.Database.Migrate(); 
+
     DataSeeder.Seed(dbContext);  
 }
 
-//  HTTP request pipeline confoig
+// Configure HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

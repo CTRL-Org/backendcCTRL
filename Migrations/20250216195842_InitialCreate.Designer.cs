@@ -2,9 +2,9 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using backendcCTRL.DataAccess;
 
 #nullable disable
@@ -12,7 +12,7 @@ using backendcCTRL.DataAccess;
 namespace backendcCTRL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250214192629_InitialCreate")]
+    [Migration("20250216195842_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -21,170 +21,148 @@ namespace backendcCTRL.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.1")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("backendcCTRL.Models.Appointment", b =>
                 {
                     b.Property<int>("AppointmentID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AppointmentID"));
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("PatientID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PatientID1")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Reason")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("AppointmentID");
 
                     b.HasIndex("PatientID");
 
-                    b.HasIndex("PatientID1");
-
-                    b.ToTable("Appointment", (string)null);
+                    b.ToTable("appointment", (string)null);
                 });
 
             modelBuilder.Entity("backendcCTRL.Models.HealthStats", b =>
                 {
                     b.Property<int>("StatID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StatID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StatID"));
 
                     b.Property<string>("DataType")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("PatientID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PatientID1")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.HasKey("StatID");
 
                     b.HasIndex("PatientID");
 
-                    b.HasIndex("PatientID1");
-
-                    b.ToTable("HealthStats", (string)null);
+                    b.ToTable("healthstats", (string)null);
                 });
 
             modelBuilder.Entity("backendcCTRL.Models.Patient", b =>
                 {
                     b.Property<int>("PatientID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PatientID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PatientID"));
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Gender")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("character varying(10)");
 
                     b.Property<string>("IDNumber")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("character varying(20)");
 
                     b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserID1")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("PatientID");
 
                     b.HasIndex("UserID");
 
-                    b.HasIndex("UserID1");
-
-                    b.ToTable("Patient", (string)null);
+                    b.ToTable("patient", (string)null);
                 });
 
             modelBuilder.Entity("backendcCTRL.Models.User", b =>
                 {
                     b.Property<int>("UserID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserID"));
+                        .HasColumnType("integer")
+                        .HasColumnName("userid");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("character varying(15)");
 
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("UserID");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("user", (string)null);
                 });
 
             modelBuilder.Entity("backendcCTRL.Models.Appointment", b =>
                 {
-                    b.HasOne("backendcCTRL.Models.Patient", null)
-                        .WithMany()
-                        .HasForeignKey("PatientID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("backendcCTRL.Models.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientID1")
+                        .WithMany("Appointments")
+                        .HasForeignKey("PatientID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -193,15 +171,9 @@ namespace backendcCTRL.Migrations
 
             modelBuilder.Entity("backendcCTRL.Models.HealthStats", b =>
                 {
-                    b.HasOne("backendcCTRL.Models.Patient", null)
-                        .WithMany()
-                        .HasForeignKey("PatientID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("backendcCTRL.Models.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientID1")
+                        .WithMany("HealthStats")
+                        .HasForeignKey("PatientID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -210,19 +182,20 @@ namespace backendcCTRL.Migrations
 
             modelBuilder.Entity("backendcCTRL.Models.Patient", b =>
                 {
-                    b.HasOne("backendcCTRL.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("backendcCTRL.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserID1")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("backendcCTRL.Models.Patient", b =>
+                {
+                    b.Navigation("Appointments");
+
+                    b.Navigation("HealthStats");
                 });
 #pragma warning restore 612, 618
         }
