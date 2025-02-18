@@ -18,21 +18,21 @@ namespace backendcCTRL.Models
         [ForeignKey("userid")]
         public User User { get; set; } = null!;
 
-        [Required]
+        
         [StringLength(100)]
         [Column("fullname")]
         public string FullName { get; set; } = null!;
 
-        [Required]
+        
         [Column("dateofbirth")]
         public DateTime DateOfBirth { get; set; }
 
-        [Required]
+        
         [StringLength(10)]
         [Column("gender")]
         public string Gender { get; set; } = null!;
 
-        [Required]
+        
         [StringLength(20)]
         [Column("idnumber")]
         public string IDNumber { get; set; } = null!;

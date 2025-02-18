@@ -37,17 +37,48 @@ public class AppointmentController : ControllerBase
     }
 
     // POST: api/Appointment
-    [HttpPost]
-    public IActionResult CreateAppointment([FromBody] Appointment appointment)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+    // [HttpPost]
+    // public IActionResult CreateAppointment([FromBody] Appointment appointment)
+    // {
+    //     if (!ModelState.IsValid)
+    //     {
+    //         return BadRequest(ModelState);
+    //     }
 
-        var createdAppointment = _appointmentService.CreateAppointment(appointment);
-        return CreatedAtAction(nameof(GetAppointmentById), new { id = createdAppointment.AppointmentID }, createdAppointment);
+    //     var createdAppointment = _appointmentService.CreateAppointment(appointment);
+    //     return CreatedAtAction(nameof(GetAppointmentById), new { id = createdAppointment.AppointmentID }, createdAppointment);
+    // }
+
+    [HttpPost]
+public IActionResult CreateAppointment([FromBody] CreateAppointmentDTO dto)
+{
+    if (!ModelState.IsValid)
+    {
+        return BadRequest(ModelState);
     }
+
+    // Fetch existing patient from DB
+    var patient = _context.Patients.Find(dto.PatientID);
+    if (patient == null)
+    {
+        return NotFound("Patient not found.");
+    }
+
+    var appointment = new Appointment
+    {
+        PatientID = dto.PatientID,
+        Patient = patient, 
+        DateTime = dto.DateTime,
+        Reason = dto.Reason,
+        Status = dto.Status
+    };
+
+    _context.Appointments.Add(appointment);
+    _context.SaveChanges();
+
+    return CreatedAtAction(nameof(GetAppointmentById), new { id = appointment.AppointmentID }, appointment);
+}
+
 
     // PUT: api/Appointment/{id}
     [HttpPut("{id}")]

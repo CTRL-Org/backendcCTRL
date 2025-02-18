@@ -17,15 +17,15 @@ namespace backendcCTRL.Models
         // [ForeignKey("patientid")]
         public Patient? Patient { get; set; }
 
-        [Required]
+        
         [Column("datetime")]  // 
         public DateTime DateTime { get; set; }
 
-        [Required]
+        
         [Column("reason")]
         public string Reason { get; set; } = null!;
 
-        [Required]
+        
         [StringLength(50)]
         [Column("status")]
         public string Status { get; set; } = null!;
