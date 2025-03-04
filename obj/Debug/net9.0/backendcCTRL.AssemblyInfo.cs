@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("backendcCTRL")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+31dde8d515d102acb4fa1df88ab6beb4995de2d4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+950c327ac5f5a50e9fd638a27bc6e07cf75c00ca")]
 [assembly: System.Reflection.AssemblyProductAttribute("backendcCTRL")]
 [assembly: System.Reflection.AssemblyTitleAttribute("backendcCTRL")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

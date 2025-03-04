@@ -1,21 +1,9 @@
-[HttpPost("create-health-stat")]
-public IActionResult CreateHealthStat([FromBody] CreateHealthStatDTO healthStatDTO)
+public class CreateHealthStatDTO
 {
-    if (!ModelState.IsValid)
-    {
-        return BadRequest(ModelState); // Returns validation errors
-    }
+       public int PatientID { get; set; }
 
-    var healthStat = new HealthStat
-    {
-        PatientID = healthStatDTO.PatientID,
-        DataType = healthStatDTO.DataType,
-        Value = healthStatDTO.Value,
-        Timestamp = healthStatDTO.Timestamp
-    };
+    public required string DataType { get; set; }
+    public string Value { get; set; }
 
-    _context.HealthStats.Add(healthStat);
-    _context.SaveChanges();
-
-    return CreatedAtAction(nameof(GetHealthStat), new { id = healthStat.StatID }, healthStat);
+    public DateTime Timestamp { get; set; } = DateTime.UtcNow; // Defaults to current time
 }

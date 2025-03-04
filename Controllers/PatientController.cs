@@ -69,7 +69,7 @@ public class PatientController : ControllerBase
         existingPatient.FullName = patientDTO.FullName;
         existingPatient.DateOfBirth = patientDTO.DateOfBirth;
         existingPatient.Gender = patientDTO.Gender;
-        existingPatient.IdNumber = patientDTO.IdNumber;
+        existingPatient.IDNumber = patientDTO.IdNumber;
 
         var updatedPatient = _patientService.UpdatePatient(existingPatient);
         return Ok(updatedPatient);

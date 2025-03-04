@@ -14,6 +14,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IHealthStatsService, HealthStatsService>();
+builder.Services.AddScoped<IPatientService, PatientService>();
+
 
 // Add controllers and endpoints
 builder.Services.AddControllers();
