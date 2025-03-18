@@ -16,7 +16,7 @@ namespace backendcCTRL.DataAccess
         {
             base.OnModelCreating(modelBuilder);
 
-            // Table naming to match PostgreSQL schema
+            // Explicitly match table names with PostgreSQL
             modelBuilder.Entity<User>().ToTable("user");
             modelBuilder.Entity<Patient>().ToTable("patient");
             modelBuilder.Entity<Appointment>().ToTable("appointment");
@@ -29,23 +29,36 @@ namespace backendcCTRL.DataAccess
             modelBuilder.Entity<User>()
                 .Property(u => u.UserID)
                 .HasColumnName("userid")
-                .ValueGeneratedNever(); 
+                .ValueGeneratedNever(); // Prevents auto-generation if manually assigned
 
-            // Patient -> User (One-to-One)
+            // Patient Table Configuration
+            modelBuilder.Entity<Patient>()
+                .HasKey(p => p.PatientID);
+
+            modelBuilder.Entity<Patient>()
+                .Property(p => p.PatientID)
+                .HasColumnName("patientid")
+                .ValueGeneratedNever(); // Ensures manual assignment (BIGINT)
+
+            modelBuilder.Entity<Patient>()
+                .Property(p => p.UserID)
+                .HasColumnName("userid");
+
+            // One-to-One: User -> Patient
             modelBuilder.Entity<Patient>()
                 .HasOne(p => p.User)
-                .WithMany()  
-                .HasForeignKey(p => p.UserID)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .WithOne(u => u.Patient) // Added navigation in User model
+                .HasForeignKey<Patient>(p => p.UserID)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // Patient -> Appointments (One-to-Many)
+            // One-to-Many: Patient -> Appointments
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Patient)
                 .WithMany(p => p.Appointments)
                 .HasForeignKey(a => a.PatientID)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Patient -> HealthStats (One-to-Many)
+            // One-to-Many: Patient -> HealthStats
             modelBuilder.Entity<HealthStats>()
                 .HasOne(h => h.Patient)
                 .WithMany(p => p.HealthStats)

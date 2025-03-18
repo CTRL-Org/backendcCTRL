@@ -36,16 +36,26 @@ public class HealthStatsController : ControllerBase
 
     // POST: api/HealthStats
     [HttpPost]
-    public IActionResult CreateHealthStat([FromBody] HealthStats healthStat)
+    public IActionResult CreateHealthStat([FromBody] CreateHealthStatDTO healthStatDto)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
+        
+        // Map DTO to model
+        var healthStat = new HealthStats
+        {
+            PatientID = healthStatDto.PatientID,
+            DataType = healthStatDto.DataType,
+            Value = healthStatDto.Value,
+            Timestamp = healthStatDto.Timestamp // Or set DateTime.UtcNow here if needed
+        };
 
         var createdHealthStat = _healthStatsService.CreateHealthStat(healthStat);
         return CreatedAtAction(nameof(GetHealthStatById), new { id = createdHealthStat.StatID }, createdHealthStat);
     }
+
 
     // DELETE: api/HealthStats/{id}
     [HttpDelete("{id}")]

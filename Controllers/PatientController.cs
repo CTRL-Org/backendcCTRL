@@ -66,14 +66,23 @@ public class PatientController : ControllerBase
             return NotFound();
         }
 
+        // Update the existing patient with data from the DTO
         existingPatient.FullName = patientDTO.FullName;
         existingPatient.DateOfBirth = patientDTO.DateOfBirth;
         existingPatient.Gender = patientDTO.Gender;
         existingPatient.IDNumber = patientDTO.IdNumber;
 
-        var updatedPatient = _patientService.UpdatePatient(existingPatient);
+        // Pass both the id and updated patient object to the service
+        var updatedPatient = _patientService.UpdatePatient(id, existingPatient);
+
+        if (updatedPatient == null)
+        {
+            return BadRequest("Error updating patient.");
+        }
+
         return Ok(updatedPatient);
     }
+
 
     // DELETE: api/Patient/{id}
     [HttpDelete("{id}")]

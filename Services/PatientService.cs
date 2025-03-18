@@ -35,15 +35,15 @@ namespace backendcCTRL.Services
             return patient;
         }
 
-        public Patient? UpdatePatient(Patient updatedPatient)
+        public Patient? UpdatePatient(int id, Patient updatedPatient) // Add int id parameter
         {
-            var patient = _context.Patients.Find(updatedPatient.PatientID);
+            var patient = _context.Patients.Find(id); // Use id to find the patient
             if (patient == null)
             {
-                throw new KeyNotFoundException($"Patient with ID {updatedPatient.PatientID} not found.");
+                throw new KeyNotFoundException($"Patient with ID {id} not found.");
             }
 
-            
+            // Update patient properties
             patient.FullName = updatedPatient.FullName;
             patient.DateOfBirth = updatedPatient.DateOfBirth;
             patient.Gender = updatedPatient.Gender;
@@ -52,6 +52,7 @@ namespace backendcCTRL.Services
             _context.SaveChanges();
             return patient;
         }
+
 
 
         public bool DeletePatient(int id)

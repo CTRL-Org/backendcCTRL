@@ -20,9 +20,9 @@ namespace backendcCTRL.Services
             return _context.Users.ToList();
         }
 
-        public User GetUserById(int id)
+        public User? GetUserById(int id)
         {
-            return _context.Users.FirstOrDefault(u => u.UserID == id)!;
+            return _context.Users.FirstOrDefault(u => u.UserID == id);
         }
 
         public User CreateUser(User user)
@@ -32,7 +32,7 @@ namespace backendcCTRL.Services
             return user;
         }
 
-        public User UpdateUser(User user)
+        public User? UpdateUser(User user)
         {
             var existingUser = _context.Users.Find(user.UserID);
             if (existingUser == null)
@@ -42,9 +42,9 @@ namespace backendcCTRL.Services
             existingUser.Username = user.Username;
             existingUser.Password = user.Password;
             existingUser.Email = user.Email;
-            existingUser.PhoneNumber = user.PhoneNumber;
-            _context.SaveChanges();
+            existingUser.PhoneNumber = user.PhoneNumber ?? existingUser.PhoneNumber; // Ensure PhoneNumber is not overwritten with null
 
+            _context.SaveChanges();
             return existingUser;
         }
 
@@ -71,27 +71,26 @@ namespace backendcCTRL.Services
             return true;
         }
 
-        public User Authenticate(string username, string password)
+        public User? Authenticate(string username, string password)
         {
-            return _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password)!;
+            return _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
         }
 
-public (bool Success, string Message) RegisterUser(UserRegistrationDto userDto)
-{
-    var newUser = new User
-    {
-        Username = userDto.Username,
-        Email = userDto.Email,
-        Password = userDto.Password,
-        Role = userDto.Role 
-    };
+        public (bool Success, string Message) RegisterUser(UserRegistrationDto userDto)
+        {
+            var newUser = new User
+            {
+                Username = userDto.Username,
+                Email = userDto.Email,
+                Password = userDto.Password,
+                Role = userDto.Role
+            };
 
-    _context.Users.Add(newUser);
-    _context.SaveChanges();
+            _context.Users.Add(newUser);
+            _context.SaveChanges();
 
-    return (true, "User registered successfully.");
-}
-
+            return (true, "User registered successfully.");
+        }
 
         public (bool Success, string Message) UpdateEmail(UpdateEmailDto emailDto)
         {
@@ -111,16 +110,15 @@ public (bool Success, string Message) RegisterUser(UserRegistrationDto userDto)
             if (user == null)
                 return (false, "User not found.");
 
-            user.PhoneNumber = phoneDto.NewPhoneNumber;
+            user.PhoneNumber = phoneDto.NewPhoneNumber ?? user.PhoneNumber; // Ensure it doesn't get overwritten with null
             _context.SaveChanges();
 
             return (true, "Phone number updated successfully.");
         }
 
-        public User Authenticate(UserLoginDto loginDto)
+        public User? Authenticate(UserLoginDto loginDto)
         {
             return _context.Users.FirstOrDefault(u => u.Username == loginDto.Username && u.Password == loginDto.Password);
         }
-
     }
 }

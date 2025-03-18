@@ -5,34 +5,30 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backendcCTRL.Models
 {
+    [Table("patient")]  // Ensure table name matches PostgreSQL
     public class Patient
     {
         [Key]
         [Column("patientid")]
-        public int PatientID { get; set; }
+        public int PatientID { get; set; }  // ✅ Change from long to int
 
-        [Required]
         [Column("userid")]
-        public int UserID { get; set; } 
+        public int UserID { get; set; }  // ✅ Change from long to int
 
-        [ForeignKey("userid")]
+        [ForeignKey("UserID")]
         public User User { get; set; } = null!;
 
-        
         [StringLength(100)]
         [Column("fullname")]
         public string FullName { get; set; } = null!;
 
-        
         [Column("dateofbirth")]
-        public DateTime DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }  // ✅ Reverted from DateOnly to DateTime
 
-        
         [StringLength(10)]
         [Column("gender")]
         public string Gender { get; set; } = null!;
 
-        
         [StringLength(20)]
         [Column("idnumber")]
         public string IDNumber { get; set; } = null!;
@@ -41,4 +37,5 @@ namespace backendcCTRL.Models
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
         public ICollection<HealthStats> HealthStats { get; set; } = new List<HealthStats>();
     }
+
 }

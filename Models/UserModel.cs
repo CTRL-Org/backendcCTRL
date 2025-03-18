@@ -6,28 +6,37 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace backendcCTRL.Models
 {
 
+[Table("user")]
 public class User
 {
     [Key]
+    [Column("userid")]
     public int UserID { get; set; }
 
-    
+    [Required]
     [StringLength(50)]
-    public required string Role { get; set; }
+    [Column("username")]
+    public string Username { get; set; } = null!;
 
-    
-    [StringLength(50)]
-    public required string Username { get; set; }
-
-    
-    [StringLength(255)]
-    public required string Password { get; set; }
-
-    
+    [Required]
     [StringLength(100)]
-    public required string Email { get; set; }
+    [Column("email")]
+    public string Email { get; set; } = null!;
+
+    [Required]
+    [Column("password")]
+    public string Password { get; set; } = null!;
+
+    [StringLength(20)]
+    [Column("user")]
+    public string Role { get; set; } = "User";
 
     [StringLength(15)]
-    public string? PhoneNumber { get; set; }
+    [Column("phonenumber")]
+    public string? PhoneNumber { get; set; } // ✅ Nullable field
+
+    // Navigation Property
+    public Patient? Patient { get; set; }
 }
+
 }

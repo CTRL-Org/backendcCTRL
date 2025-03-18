@@ -159,3 +159,12 @@ C:\Users\User\backendcCTRL\obj\Debug\net9.0\refint\backendcCTRL.dll
 C:\Users\User\backendcCTRL\obj\Debug\net9.0\backendcCTRL.pdb
 C:\Users\User\backendcCTRL\obj\Debug\net9.0\backendcCTRL.genruntimeconfig.cache
 C:\Users\User\backendcCTRL\obj\Debug\net9.0\ref\backendcCTRL.dll
+C:\Users\User\backendcCTRL\bin\Debug\net9.0\Microsoft.Extensions.Caching.Abstractions.dll
+C:\Users\User\backendcCTRL\bin\Debug\net9.0\Microsoft.Extensions.Caching.Memory.dll
+C:\Users\User\backendcCTRL\bin\Debug\net9.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\User\backendcCTRL\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\User\backendcCTRL\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\User\backendcCTRL\bin\Debug\net9.0\Microsoft.Extensions.Logging.dll
+C:\Users\User\backendcCTRL\bin\Debug\net9.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\User\backendcCTRL\bin\Debug\net9.0\Microsoft.Extensions.Options.dll
+C:\Users\User\backendcCTRL\bin\Debug\net9.0\Microsoft.Extensions.Primitives.dll
