@@ -48,6 +48,19 @@ namespace back.Controllers
         }
 
 
+    // 6. Get All Users Endpoint
+    /// <summary>
+    /// Retrieves all registered users in the system.
+    /// </summary>
+    [HttpGet("all")]
+    public IActionResult GetAllUsers()
+    {
+        var users = _userService.GetAllUsers();
+        return Ok(users);
+    }
+
+
+
 
         // 3. Update Email Endpoint
         /// <summary>

@@ -26,7 +26,7 @@ public class DataSeeder
                 DateOfBirth = new DateTime(1990, 5, 20), 
                 Gender = "Male", 
                 IDNumber = "9005201234567", 
-                UserID = user.UserID  // ✅ No need to cast
+                UserID = user.UserID  
             };
             context.Patients.Add(patient);
             context.SaveChanges();

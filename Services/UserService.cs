@@ -2,6 +2,7 @@ using backendcCTRL.DataAccess;
 using backendcCTRL.Models;
 using backendcCTRL.DTOs;
 using backendcCTRL.Services.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace backendcCTRL.Services
@@ -13,67 +14,6 @@ namespace backendcCTRL.Services
         public UserService(AppDbContext context)
         {
             _context = context;
-        }
-
-        public IEnumerable<User> GetAllUsers()
-        {
-            return _context.Users.ToList();
-        }
-
-        public User? GetUserById(int id)
-        {
-            return _context.Users.FirstOrDefault(u => u.UserID == id);
-        }
-
-        public User CreateUser(User user)
-        {
-            _context.Users.Add(user);
-            _context.SaveChanges();
-            return user;
-        }
-
-        public User? UpdateUser(User user)
-        {
-            var existingUser = _context.Users.Find(user.UserID);
-            if (existingUser == null)
-                return null;
-
-            existingUser.Role = user.Role;
-            existingUser.Username = user.Username;
-            existingUser.Password = user.Password;
-            existingUser.Email = user.Email;
-            existingUser.PhoneNumber = user.PhoneNumber ?? existingUser.PhoneNumber; // Ensure PhoneNumber is not overwritten with null
-
-            _context.SaveChanges();
-            return existingUser;
-        }
-
-        public (bool Success, string Message) UpdatePassword(UpdatePasswordDto passwordDto)
-        {
-            var user = _context.Users.Find(passwordDto.UserId);
-            if (user == null)
-                return (false, "User not found.");
-
-            user.Password = passwordDto.NewPassword;
-            _context.SaveChanges();
-
-            return (true, "Password updated successfully.");
-        }
-
-        public bool DeleteUser(int id)
-        {
-            var user = _context.Users.Find(id);
-            if (user == null)
-                return false;
-
-            _context.Users.Remove(user);
-            _context.SaveChanges();
-            return true;
-        }
-
-        public User? Authenticate(string username, string password)
-        {
-            return _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
         }
 
         public (bool Success, string Message) RegisterUser(UserRegistrationDto userDto)
@@ -88,8 +28,26 @@ namespace backendcCTRL.Services
 
             _context.Users.Add(newUser);
             _context.SaveChanges();
-
             return (true, "User registered successfully.");
+        }
+
+        public User? Authenticate(string username, string password)
+        {
+            return _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
+        }
+
+        public (bool Success, string Message) UpdatePassword(UpdatePasswordDto passwordDto)
+        {
+            var user = _context.Users.Find(passwordDto.UserId);
+            if (user == null)
+                return (false, "User not found.");
+
+            if (user.Password != passwordDto.OldPassword)
+                return (false, "Old password is incorrect.");
+
+            user.Password = passwordDto.NewPassword;
+            _context.SaveChanges();
+            return (true, "Password updated successfully.");
         }
 
         public (bool Success, string Message) UpdateEmail(UpdateEmailDto emailDto)
@@ -100,7 +58,6 @@ namespace backendcCTRL.Services
 
             user.Email = emailDto.NewEmail;
             _context.SaveChanges();
-
             return (true, "Email updated successfully.");
         }
 
@@ -110,15 +67,30 @@ namespace backendcCTRL.Services
             if (user == null)
                 return (false, "User not found.");
 
-            user.PhoneNumber = phoneDto.NewPhoneNumber ?? user.PhoneNumber; // Ensure it doesn't get overwritten with null
+            user.PhoneNumber = phoneDto.NewPhoneNumber ?? user.PhoneNumber;
             _context.SaveChanges();
-
             return (true, "Phone number updated successfully.");
         }
 
-        public User? Authenticate(UserLoginDto loginDto)
+        public IEnumerable<User> GetAllUsers()
         {
-            return _context.Users.FirstOrDefault(u => u.Username == loginDto.Username && u.Password == loginDto.Password);
+            return _context.Users.ToList();
+        }
+
+        public User? GetUserById(int id)
+        {
+            return _context.Users.FirstOrDefault(u => u.UserID == id);
+        }
+
+        public bool DeleteUser(int id)
+        {
+            var user = _context.Users.Find(id);
+            if (user == null)
+                return false;
+
+            _context.Users.Remove(user);
+            _context.SaveChanges();
+            return true;
         }
     }
 }

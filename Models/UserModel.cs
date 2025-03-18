@@ -28,12 +28,13 @@ public class User
     public string Password { get; set; } = null!;
 
     [StringLength(20)]
-    [Column("user")]
+    [Column("role")]
     public string Role { get; set; } = "User";
+
 
     [StringLength(15)]
     [Column("phonenumber")]
-    public string? PhoneNumber { get; set; } // ✅ Nullable field
+    public string? PhoneNumber { get; set; } 
 
     // Navigation Property
     public Patient? Patient { get; set; }

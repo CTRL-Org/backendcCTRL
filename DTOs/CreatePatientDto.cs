@@ -19,7 +19,7 @@ public class CreatePatientDTO
 
     [Required]
     [StringLength(20)]
-    public string IdNumber { get; set; } = string.Empty;
+    public string IdNumber { get; set; } = string.Empty; // Ensure this property is present
 
     [Required]
     [EmailAddress]
