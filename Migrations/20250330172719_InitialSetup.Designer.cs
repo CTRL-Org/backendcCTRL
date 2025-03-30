@@ -12,8 +12,8 @@ using backendcCTRL.DataAccess;
 namespace backendcCTRL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250216195842_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250330172719_InitialSetup")]
+    partial class InitialSetup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,24 +29,29 @@ namespace backendcCTRL.Migrations
                 {
                     b.Property<int>("AppointmentID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("appointmentid");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AppointmentID"));
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("datetime");
 
                     b.Property<int>("PatientID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("patientid");
 
                     b.Property<string>("Reason")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("reason");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("status");
 
                     b.HasKey("AppointmentID");
 
@@ -59,26 +64,31 @@ namespace backendcCTRL.Migrations
                 {
                     b.Property<int>("StatID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("statid");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StatID"));
 
                     b.Property<string>("DataType")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("datatype");
 
                     b.Property<int>("PatientID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("patientid");
 
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("timestamp");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("value");
 
                     b.HasKey("StatID");
 
@@ -90,35 +100,39 @@ namespace backendcCTRL.Migrations
             modelBuilder.Entity("backendcCTRL.Models.Patient", b =>
                 {
                     b.Property<int>("PatientID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PatientID"));
+                        .HasColumnType("integer")
+                        .HasColumnName("patientid");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("dateofbirth");
 
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("fullname");
 
                     b.Property<string>("Gender")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("gender");
 
                     b.Property<string>("IDNumber")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("idnumber");
 
                     b.Property<int>("UserID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("userid");
 
                     b.HasKey("PatientID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserID")
+                        .IsUnique();
 
                     b.ToTable("patient", (string)null);
                 });
@@ -132,26 +146,30 @@ namespace backendcCTRL.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("email");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("text")
+                        .HasColumnName("password");
 
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(15)
-                        .HasColumnType("character varying(15)");
+                        .HasColumnType("character varying(15)")
+                        .HasColumnName("phonenumber");
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("role");
 
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("username");
 
                     b.HasKey("UserID");
 
@@ -183,9 +201,9 @@ namespace backendcCTRL.Migrations
             modelBuilder.Entity("backendcCTRL.Models.Patient", b =>
                 {
                     b.HasOne("backendcCTRL.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .WithOne("Patient")
+                        .HasForeignKey("backendcCTRL.Models.Patient", "UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -196,6 +214,11 @@ namespace backendcCTRL.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("HealthStats");
+                });
+
+            modelBuilder.Entity("backendcCTRL.Models.User", b =>
+                {
+                    b.Navigation("Patient");
                 });
 #pragma warning restore 612, 618
         }

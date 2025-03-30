@@ -16,7 +16,6 @@ builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IHealthStatsService, HealthStatsService>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 
-
 // Add controllers and endpoints
 builder.Services.AddControllers();
 
@@ -29,15 +28,26 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Call seeder for data **(Ensure the database exists before running this)**
-using (var scope = app.Services.CreateScope())
+// Call seeder for data
+try
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-    // **Commented out the automatic migration**
-    // dbContext.Database.Migrate(); 
-
-    DataSeeder.Seed(dbContext);  
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        
+        // Ensure database exists
+        dbContext.Database.EnsureCreated();
+        
+        Console.WriteLine("Database created/verified. Starting data seeding...");
+        DataSeeder.Seed(dbContext);
+        Console.WriteLine("Data seeding completed successfully.");
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"An error occurred during database setup: {ex.Message}");
+    Console.WriteLine($"Stack trace: {ex.StackTrace}");
+    return;
 }
 
 // Configure HTTP request pipeline
@@ -50,4 +60,5 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
 app.Run();
