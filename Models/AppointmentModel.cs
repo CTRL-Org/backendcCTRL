@@ -12,20 +12,21 @@ namespace backendcCTRL.Models
 
         [Required]
         [Column("patientid")]
-        public int PatientID { get; set; } 
+        public int PatientID { get; set; }
 
-        // [ForeignKey("patientid")]
+        [ForeignKey("PatientID")]
         public Patient? Patient { get; set; }
 
-        
-        [Column("datetime")]  // 
+        [Required]
+        [Column("datetime")]
         public DateTime DateTime { get; set; }
 
-        
+        [Required]
+        [StringLength(500)]
         [Column("reason")]
         public string Reason { get; set; } = null!;
 
-        
+        [Required]
         [StringLength(50)]
         [Column("status")]
         public string Status { get; set; } = null!;

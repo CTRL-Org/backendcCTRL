@@ -4,6 +4,7 @@ using backendcCTRL.DTOs;
 using backendcCTRL.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace backendcCTRL.Services
 {
@@ -18,12 +19,18 @@ namespace backendcCTRL.Services
 
         public (bool Success, string Message) RegisterUser(UserRegistrationDto userDto)
         {
+            if (_context.Users.Any(u => u.Username == userDto.Username))
+                return (false, "Username already exists.");
+
+            if (_context.Users.Any(u => u.Email == userDto.Email))
+                return (false, "Email already exists.");
+
             var newUser = new User
             {
                 Username = userDto.Username,
                 Email = userDto.Email,
-                Password = userDto.Password,
-                Role = userDto.Role
+                Password = userDto.Password, // In production, this should be hashed
+                Role = userDto.Role ?? "User"
             };
 
             _context.Users.Add(newUser);
@@ -56,6 +63,9 @@ namespace backendcCTRL.Services
             if (user == null)
                 return (false, "User not found.");
 
+            if (_context.Users.Any(u => u.Email == emailDto.NewEmail && u.UserID != emailDto.UserId))
+                return (false, "Email already in use.");
+
             user.Email = emailDto.NewEmail;
             _context.SaveChanges();
             return (true, "Email updated successfully.");
@@ -79,7 +89,7 @@ namespace backendcCTRL.Services
 
         public User? GetUserById(int id)
         {
-            return _context.Users.FirstOrDefault(u => u.UserID == id);
+            return _context.Users.Find(id);
         }
 
         public bool DeleteUser(int id)

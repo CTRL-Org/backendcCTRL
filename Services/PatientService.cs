@@ -1,6 +1,7 @@
 using backendcCTRL.DataAccess;
 using backendcCTRL.Models;
 using backendcCTRL.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace backendcCTRL.Services
 {
@@ -15,17 +16,14 @@ namespace backendcCTRL.Services
 
         public IEnumerable<Patient> GetAllPatients()
         {
-            return _context.Patients.ToList();
+            return _context.Patients.Include(p => p.User).ToList();
         }
 
-        public Patient GetPatientById(int id)
+        public Patient? GetPatientById(int id)
         {
-            var patient = _context.Patients.FirstOrDefault(p => p.PatientID == id);
-            if (patient == null)
-            {
-                throw new KeyNotFoundException($"Patient with ID {id} not found.");
-            }
-            return patient;
+            return _context.Patients
+                .Include(p => p.User)
+                .FirstOrDefault(p => p.PatientID == id);
         }
 
         public Patient CreatePatient(Patient patient)
@@ -35,25 +33,19 @@ namespace backendcCTRL.Services
             return patient;
         }
 
-        public Patient? UpdatePatient(int id, Patient updatedPatient) // Add int id parameter
+        public Patient? UpdatePatient(int id, Patient updatedPatient)
         {
-            var patient = _context.Patients.Find(id); // Use id to find the patient
+            var patient = _context.Patients.Find(id);
             if (patient == null)
-            {
-                throw new KeyNotFoundException($"Patient with ID {id} not found.");
-            }
+                return null;
 
-            // Update patient properties
             patient.FullName = updatedPatient.FullName;
             patient.DateOfBirth = updatedPatient.DateOfBirth;
             patient.Gender = updatedPatient.Gender;
-            patient.IDNumber = updatedPatient.IDNumber;
 
             _context.SaveChanges();
             return patient;
         }
-
-
 
         public bool DeletePatient(int id)
         {

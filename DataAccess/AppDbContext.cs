@@ -7,10 +7,10 @@ namespace backendcCTRL.DataAccess
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Patient> Patients { get; set; }
-        public DbSet<Appointment> Appointments { get; set; }
-        public DbSet<HealthStats> HealthStats { get; set; }
+        public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Patient> Patients { get; set; } = null!;
+        public DbSet<Appointment> Appointments { get; set; } = null!;
+        public DbSet<HealthStats> HealthStats { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,24 +42,29 @@ namespace backendcCTRL.DataAccess
                 .Property(p => p.UserID)
                 .HasColumnName("userid");
 
-            // One-to-One: User -> Patient
             modelBuilder.Entity<Patient>()
                 .HasOne(p => p.User)
-                .WithOne(u => u.Patient)
+                .WithOne()
                 .HasForeignKey<Patient>(p => p.UserID)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // One-to-Many: Patient -> Appointments
             modelBuilder.Entity<Appointment>()
+                .HasKey(a => a.AppointmentID);
+
+            modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Patient)
-                .WithMany(p => p.Appointments)
+                .WithMany()
                 .HasForeignKey(a => a.PatientID)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // One-to-Many: Patient -> HealthStats
             modelBuilder.Entity<HealthStats>()
+                .HasKey(h => h.StatID);
+
+            modelBuilder.Entity<HealthStats>()
                 .HasOne(h => h.Patient)
-                .WithMany(p => p.HealthStats)
+                .WithMany()
                 .HasForeignKey(h => h.PatientID)
                 .OnDelete(DeleteBehavior.Cascade);
         }

@@ -1,7 +1,7 @@
 using backendcCTRL.DataAccess;  
 using backendcCTRL.Models;
 using backendcCTRL.Services.Interfaces;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace backendcCTRL.Services
 {
@@ -16,12 +16,14 @@ namespace backendcCTRL.Services
 
         public IEnumerable<Appointment> GetAllAppointments()
         {
-            return _context.Appointments.ToList();
+            return _context.Appointments.Include(a => a.Patient).ToList();
         }
 
-        public Appointment GetAppointmentById(int id)
+        public Appointment? GetAppointmentById(int id)
         {
-            return _context.Appointments.FirstOrDefault(a => a.AppointmentID == id);
+            return _context.Appointments
+                .Include(a => a.Patient)
+                .FirstOrDefault(a => a.AppointmentID == id);
         }
 
         public Appointment CreateAppointment(Appointment appointment)
@@ -31,7 +33,7 @@ namespace backendcCTRL.Services
             return appointment;
         }
 
-        public Appointment UpdateAppointment(Appointment appointment)
+        public Appointment? UpdateAppointment(Appointment appointment)
         {
             var existingAppointment = _context.Appointments.Find(appointment.AppointmentID);
             if (existingAppointment == null)
@@ -55,41 +57,10 @@ namespace backendcCTRL.Services
             _context.SaveChanges();
             return true;
         }
+
+        public bool AppointmentExists(int id)
+        {
+            return _context.Appointments.Any(a => a.AppointmentID == id);
+        }
     }
 }
-
-
-// using backendcCTRL.DataAccess; // Updated from backendcCTRL.Data
-// using backendcCTRL.Models;
-// using backendcCTRL.Services.Interfaces;
-
-// using backendcCTRL.DataAccess; // Updated from backendcCTRL.Data
-// using backendcCTRL.Models;
-// using backendcCTRL.Services.Interfaces;
-
-// namespace backendcCTRL.Services
-// {
-//     public class AppointmentService : IAppointmentService
-//     {
-//         private readonly AppDbContext _context;
-
-//         public AppointmentService(AppDbContext context)
-//         {
-//             _context = context;
-//         }
-
-//         public IEnumerable<Appointment> GetAllAppointments()
-//         {
-//             return _context.Appointments.ToList();
-//         }
-
-//         public Appointment GetAppointmentById(int id)
-//         {
-//             return _context.Appointments.FirstOrDefault(a => a.AppointmentID == id);
-//         }
-
-//         public Appointment CreateAppointment(Appointment appointment);
-       
-
-//        }
-// }

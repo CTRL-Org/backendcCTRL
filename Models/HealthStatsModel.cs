@@ -10,25 +10,27 @@ namespace backendcCTRL.Models
         [Column("statid")]
         public int StatID { get; set; }
 
-        
         [Column("patientid")]
-        public int PatientID { get; set; } 
+        public int PatientID { get; set; }
 
-        // [ForeignKey("patientid")]
-        public Patient Patient { get; set; } = null!; 
+        [ForeignKey("PatientID")]
+        public Patient Patient { get; set; } = null!;
 
-        
-        [StringLength(50)]
-        [Column("datatype")]
-        public string DataType { get; set; } = null!;
+        [Column("height")]
+        public decimal? Height { get; set; }
 
-        
-        [StringLength(255)]
-        [Column("value")]
-        public string Value { get; set; } = null!;
+        [Column("weight")]
+        public decimal? Weight { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [Column("timestamp")]
-        public DateTime Timestamp { get; set; }
+        [Column("bloodtype")]
+        [StringLength(5)]
+        public string? BloodType { get; set; }
+
+        [Column("allergies")]
+        [StringLength(500)]
+        public string? Allergies { get; set; }
+
+        [Column("lastupdated")]
+        public DateTime LastUpdated { get; set; }
     }
 }

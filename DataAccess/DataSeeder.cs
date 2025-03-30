@@ -43,7 +43,7 @@ public class DataSeeder
                 var appointment = new Appointment 
                 { 
                     PatientID = patient.PatientID,
-                    DateTime = DateTime.UtcNow, 
+                    DateTime = DateTime.UtcNow.AddDays(1), 
                     Reason = "General Checkup", 
                     Status = "Scheduled" 
                 };
@@ -51,29 +51,41 @@ public class DataSeeder
                 context.SaveChanges();
                 Console.WriteLine($"Created appointment with ID: {appointment.AppointmentID}");
 
-                var healthStat = new HealthStats 
-                { 
+                var healthStats = new HealthStats
+                {
                     PatientID = patient.PatientID,
-                    DataType = "Blood Pressure", 
-                    Value = "120/80", 
-                    Timestamp = DateTime.UtcNow 
+                    Height = 180,
+                    Weight = 75,
+                    BloodType = "A+",
+                    Allergies = "None",
+                    LastUpdated = DateTime.UtcNow
                 };
-                context.HealthStats.Add(healthStat);
+                context.HealthStats.Add(healthStats);
                 context.SaveChanges();
-                Console.WriteLine($"Created health stat with ID: {healthStat.StatID}");
+                Console.WriteLine($"Created health stats with ID: {healthStats.StatID}");
 
-                Console.WriteLine("Test data inserted successfully!");
+                // Verify the data was saved
+                var savedUser = context.Users.FirstOrDefault(u => u.Username == "testuser");
+                var savedPatient = context.Patients.FirstOrDefault(p => p.FullName == "John Doe");
+                var savedAppointment = context.Appointments.FirstOrDefault(a => a.PatientID == patient.PatientID);
+                var savedHealthStats = context.HealthStats.FirstOrDefault(h => h.PatientID == patient.PatientID);
+
+                Console.WriteLine("\nVerifying seeded data:");
+                Console.WriteLine($"User exists: {savedUser != null}, ID: {savedUser?.UserID}");
+                Console.WriteLine($"Patient exists: {savedPatient != null}, ID: {savedPatient?.PatientID}");
+                Console.WriteLine($"Appointment exists: {savedAppointment != null}, ID: {savedAppointment?.AppointmentID}");
+                Console.WriteLine($"HealthStats exists: {savedHealthStats != null}, ID: {savedHealthStats?.StatID}");
             }
             else
             {
-                Console.WriteLine(" Test data already exists, skipping seeding.");
+                Console.WriteLine("Data already exists, skipping seeding.");
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error during seeding: {ex.Message}");
             Console.WriteLine($"Stack trace: {ex.StackTrace}");
-            throw; // Re-throw to ensure the error is not silently swallowed
+            throw;
         }
     }
 }

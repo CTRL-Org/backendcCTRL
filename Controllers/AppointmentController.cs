@@ -1,100 +1,132 @@
 using Microsoft.AspNetCore.Mvc;
 using backendcCTRL.DTOs;
 using backendcCTRL.Services.Interfaces;
-using backendcCTRL.Models; 
+using backendcCTRL.Models;
+using Microsoft.Extensions.Logging;
 
-
-[ApiController]
-[Route("api/[controller]")]
-public class AppointmentController : ControllerBase
+namespace backendcCTRL.Controllers
 {
-    private readonly IAppointmentService _appointmentService;
-
-    // Constructor
-    public AppointmentController(IAppointmentService appointmentService)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AppointmentController : ControllerBase
     {
-        _appointmentService = appointmentService;
-    }
+        private readonly IAppointmentService _appointmentService;
+        private readonly ILogger<AppointmentController> _logger;
 
-    // GET: api/Appointment
-    [HttpGet]
-    public IActionResult GetAllAppointments()
-    {
-        var appointments = _appointmentService.GetAllAppointments();
-        return Ok(appointments);
-    }
-
-    // GET: api/Appointment/{id}
-    [HttpGet("{id}")]
-    public IActionResult GetAppointmentById(int id)
-    {
-        var appointment = _appointmentService.GetAppointmentById(id);
-        if (appointment == null)
+        public AppointmentController(IAppointmentService appointmentService, ILogger<AppointmentController> logger)
         {
-            return NotFound();
-        }
-        return Ok(appointment);
-    }
-
-    // POST: api/Appointment
-    [HttpPost]
-    public IActionResult CreateAppointment([FromBody] CreateAppointmentDTO appointmentDTO)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
+            _appointmentService = appointmentService;
+            _logger = logger;
         }
 
-        var appointment = new Appointment
+        // GET: api/Appointment
+        [HttpGet]
+        public IActionResult GetAllAppointments()
         {
-            PatientID = appointmentDTO.PatientID,
-            DateTime = appointmentDTO.DateTime,
-            Reason = appointmentDTO.Reason,
-            Status = "Pending" // Set status explicitly in the controller or service
-        };
+            _logger.LogInformation("Getting all appointments");
+            try
+            {
+                var appointments = _appointmentService.GetAllAppointments();
+                _logger.LogInformation($"Found {appointments.Count()} appointments");
+                return Ok(appointments);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error getting appointments: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
 
-        var createdAppointment = _appointmentService.CreateAppointment(appointment);
-        
-        return CreatedAtAction(nameof(GetAppointmentById), new { id = createdAppointment.AppointmentID }, createdAppointment);
-    }
+        // GET: api/Appointment/{id}
+        [HttpGet("{id}")]
+        public IActionResult GetAppointmentById(int id)
+        {
+            _logger.LogInformation($"Getting appointment with ID: {id}");
+            var appointment = _appointmentService.GetAppointmentById(id);
+            if (appointment == null)
+            {
+                _logger.LogWarning($"Appointment with ID {id} not found");
+                return NotFound();
+            }
+            return Ok(appointment);
+        }
 
-
-    // PUT: api/Appointment/{id}
-        [HttpPut("{id}")]
-        public IActionResult UpdateAppointment(int id, [FromBody] UpdateAppointmentDTO appointmentDTO)
+        // POST: api/Appointment
+        [HttpPost]
+        public IActionResult CreateAppointment([FromBody] Appointment appointment)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var existingAppointment = _appointmentService.GetAppointmentById(id);
-            if (existingAppointment == null)
+            try
             {
-                return NotFound();
+                var createdAppointment = _appointmentService.CreateAppointment(appointment);
+                _logger.LogInformation($"Created appointment with ID: {createdAppointment.AppointmentID}");
+                return CreatedAtAction(nameof(GetAppointmentById), new { id = createdAppointment.AppointmentID }, createdAppointment);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error creating appointment: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        // PUT: api/Appointment/{id}
+        [HttpPut("{id}")]
+        public IActionResult UpdateAppointment(int id, [FromBody] Appointment appointment)
+        {
+            if (id != appointment.AppointmentID)
+            {
+                return BadRequest("ID mismatch");
             }
 
-            // Update fields selectively
-            existingAppointment.DateTime = appointmentDTO.DateTime;
-            existingAppointment.Reason = appointmentDTO.Reason;
-            existingAppointment.Status = appointmentDTO.Status;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            var updatedAppointment = _appointmentService.UpdateAppointment(existingAppointment);
-            
-            return Ok(updatedAppointment);
+            try
+            {
+                var updatedAppointment = _appointmentService.UpdateAppointment(appointment);
+                if (updatedAppointment == null)
+                {
+                    _logger.LogWarning($"Appointment with ID {id} not found");
+                    return NotFound();
+                }
+
+                _logger.LogInformation($"Updated appointment with ID: {updatedAppointment.AppointmentID}");
+                return Ok(updatedAppointment);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error updating appointment: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
-
-    // DELETE: api/Appointment/{id}
-    [HttpDelete("{id}")]
-    public IActionResult DeleteAppointment(int id)
-    {
-        var isDeleted = _appointmentService.DeleteAppointment(id);
-        if (!isDeleted)
+        // DELETE: api/Appointment/{id}
+        [HttpDelete("{id}")]
+        public IActionResult DeleteAppointment(int id)
         {
-            return NotFound();
-        }
+            try
+            {
+                var deleted = _appointmentService.DeleteAppointment(id);
+                if (!deleted)
+                {
+                    _logger.LogWarning($"Appointment with ID {id} not found");
+                    return NotFound();
+                }
 
-        return NoContent();
+                _logger.LogInformation($"Deleted appointment with ID: {id}");
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error deleting appointment: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }

@@ -40,24 +40,52 @@ try
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         
-        // Ensure database exists
+        // Ensure database exists and tables are created
+        Console.WriteLine("Ensuring database is created...");
         dbContext.Database.EnsureCreated();
         
-        Console.WriteLine("Database created/verified. Starting data seeding...");
+        // Check tables before seeding
+        var userCount = dbContext.Users.Count();
+        var patientCount = dbContext.Patients.Count();
+        var appointmentCount = dbContext.Appointments.Count();
         
-        // Check if tables exist and have data
-        Console.WriteLine($"Users count before seeding: {dbContext.Users.Count()}");
-        Console.WriteLine($"Patients count before seeding: {dbContext.Patients.Count()}");
-        Console.WriteLine($"Appointments count before seeding: {dbContext.Appointments.Count()}");
+        Console.WriteLine($"Before seeding - Users: {userCount}, Patients: {patientCount}, Appointments: {appointmentCount}");
         
-        DataSeeder.Seed(dbContext);
-        
-        // Verify seeding results
-        Console.WriteLine($"Users count after seeding: {dbContext.Users.Count()}");
-        Console.WriteLine($"Patients count after seeding: {dbContext.Patients.Count()}");
-        Console.WriteLine($"Appointments count after seeding: {dbContext.Appointments.Count()}");
-        
-        Console.WriteLine("Data seeding completed successfully.");
+        if (userCount == 0)
+        {
+            Console.WriteLine("Starting data seeding...");
+            DataSeeder.Seed(dbContext);
+            
+            // Verify seeding results
+            userCount = dbContext.Users.Count();
+            patientCount = dbContext.Patients.Count();
+            appointmentCount = dbContext.Appointments.Count();
+            
+            Console.WriteLine($"After seeding - Users: {userCount}, Patients: {patientCount}, Appointments: {appointmentCount}");
+            
+            // Try to fetch and display the actual data
+            var users = dbContext.Users.ToList();
+            var patients = dbContext.Patients.ToList();
+            var appointments = dbContext.Appointments.ToList();
+            
+            Console.WriteLine("\nSeeded Data Details:");
+            foreach (var user in users)
+            {
+                Console.WriteLine($"User: ID={user.UserID}, Username={user.Username}");
+            }
+            foreach (var patient in patients)
+            {
+                Console.WriteLine($"Patient: ID={patient.PatientID}, Name={patient.FullName}, UserID={patient.UserID}");
+            }
+            foreach (var appt in appointments)
+            {
+                Console.WriteLine($"Appointment: ID={appt.AppointmentID}, PatientID={appt.PatientID}, DateTime={appt.DateTime}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Data already exists, skipping seeding.");
+        }
     }
 }
 catch (Exception ex)

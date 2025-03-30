@@ -1,6 +1,7 @@
 using backendcCTRL.DataAccess;  
 using backendcCTRL.Models;
 using backendcCTRL.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace backendcCTRL.Services
 {
@@ -15,33 +16,54 @@ namespace backendcCTRL.Services
 
         public IEnumerable<HealthStats> GetAllHealthStats()
         {
-            return _context.HealthStats.ToList();
+            return _context.HealthStats.Include(h => h.Patient).ToList();
         }
 
-        public HealthStats GetHealthStatById(int id)
+        public HealthStats? GetHealthStats(int id)
         {
-            var healthStat = _context.HealthStats.FirstOrDefault(h => h.StatID == id);
-            if (healthStat == null)
-            {
-                throw new KeyNotFoundException($"HealthStat with ID {id} not found.");
-            }
-            return healthStat;
+            return _context.HealthStats
+                .Include(h => h.Patient)
+                .FirstOrDefault(h => h.StatID == id);
         }
 
-        public HealthStats CreateHealthStat(HealthStats healthStats)
+        public HealthStats? GetHealthStatsByPatient(int patientId)
         {
+            return _context.HealthStats
+                .Include(h => h.Patient)
+                .FirstOrDefault(h => h.PatientID == patientId);
+        }
+
+        public HealthStats CreateHealthStats(HealthStats healthStats)
+        {
+            healthStats.LastUpdated = DateTime.UtcNow;
             _context.HealthStats.Add(healthStats);
             _context.SaveChanges();
             return healthStats;
         }
 
-        public bool DeleteHealthStat(int id)
+        public HealthStats? UpdateHealthStats(HealthStats healthStats)
         {
-            var healthStat = _context.HealthStats.Find(id);
-            if (healthStat == null)
+            var existingStats = _context.HealthStats.Find(healthStats.StatID);
+            if (existingStats == null)
+                return null;
+
+            existingStats.Height = healthStats.Height;
+            existingStats.Weight = healthStats.Weight;
+            existingStats.BloodType = healthStats.BloodType;
+            existingStats.Allergies = healthStats.Allergies;
+            existingStats.LastUpdated = DateTime.UtcNow;
+
+            _context.SaveChanges();
+            return existingStats;
+        }
+
+        public bool DeleteHealthStats(int id)
+        {
+            var healthStats = _context.HealthStats.Find(id);
+            if (healthStats == null)
                 return false;
 
-            _context.HealthStats.Remove(healthStat);
+            _context.HealthStats.Remove(healthStats);
             _context.SaveChanges();
             return true;
         }
