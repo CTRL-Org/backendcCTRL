@@ -17,7 +17,7 @@ namespace backendcCTRL.DataAccess
             base.OnModelCreating(modelBuilder);
 
             // Explicitly match table names with PostgreSQL
-            modelBuilder.Entity<User>().ToTable("user");
+            modelBuilder.Entity<User>().ToTable("app_user");
             modelBuilder.Entity<Patient>().ToTable("patient");
             modelBuilder.Entity<Appointment>().ToTable("appointment");
             modelBuilder.Entity<HealthStats>().ToTable("healthstats");
@@ -28,8 +28,7 @@ namespace backendcCTRL.DataAccess
 
             modelBuilder.Entity<User>()
                 .Property(u => u.UserID)
-                .HasColumnName("userid")
-                .ValueGeneratedNever(); // Prevents auto-generation if manually assigned
+                .HasColumnName("userid");
 
             // Patient Table Configuration
             modelBuilder.Entity<Patient>()
@@ -37,8 +36,7 @@ namespace backendcCTRL.DataAccess
 
             modelBuilder.Entity<Patient>()
                 .Property(p => p.PatientID)
-                .HasColumnName("patientid")
-                .ValueGeneratedNever(); // Ensures manual assignment (BIGINT)
+                .HasColumnName("patientid");
 
             modelBuilder.Entity<Patient>()
                 .Property(p => p.UserID)
@@ -47,7 +45,7 @@ namespace backendcCTRL.DataAccess
             // One-to-One: User -> Patient
             modelBuilder.Entity<Patient>()
                 .HasOne(p => p.User)
-                .WithOne(u => u.Patient) // Added navigation in User model
+                .WithOne(u => u.Patient)
                 .HasForeignKey<Patient>(p => p.UserID)
                 .OnDelete(DeleteBehavior.Cascade);
 

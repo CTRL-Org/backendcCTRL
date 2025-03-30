@@ -8,7 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    // Enable sensitive data logging for development
+    options.EnableSensitiveDataLogging();
+    options.LogTo(Console.WriteLine);
+});
 
 // Register application services
 builder.Services.AddScoped<IUserService, UserService>();
@@ -39,7 +44,19 @@ try
         dbContext.Database.EnsureCreated();
         
         Console.WriteLine("Database created/verified. Starting data seeding...");
+        
+        // Check if tables exist and have data
+        Console.WriteLine($"Users count before seeding: {dbContext.Users.Count()}");
+        Console.WriteLine($"Patients count before seeding: {dbContext.Patients.Count()}");
+        Console.WriteLine($"Appointments count before seeding: {dbContext.Appointments.Count()}");
+        
         DataSeeder.Seed(dbContext);
+        
+        // Verify seeding results
+        Console.WriteLine($"Users count after seeding: {dbContext.Users.Count()}");
+        Console.WriteLine($"Patients count after seeding: {dbContext.Patients.Count()}");
+        Console.WriteLine($"Appointments count after seeding: {dbContext.Appointments.Count()}");
+        
         Console.WriteLine("Data seeding completed successfully.");
     }
 }

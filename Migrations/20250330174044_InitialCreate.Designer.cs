@@ -12,8 +12,8 @@ using backendcCTRL.DataAccess;
 namespace backendcCTRL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250330172719_InitialSetup")]
-    partial class InitialSetup
+    [Migration("20250330174044_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -100,8 +100,11 @@ namespace backendcCTRL.Migrations
             modelBuilder.Entity("backendcCTRL.Models.Patient", b =>
                 {
                     b.Property<int>("PatientID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasColumnName("patientid");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PatientID"));
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("timestamp with time zone")
@@ -140,8 +143,11 @@ namespace backendcCTRL.Migrations
             modelBuilder.Entity("backendcCTRL.Models.User", b =>
                 {
                     b.Property<int>("UserID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasColumnName("userid");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserID"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -173,7 +179,7 @@ namespace backendcCTRL.Migrations
 
                     b.HasKey("UserID");
 
-                    b.ToTable("user", (string)null);
+                    b.ToTable("app_user", (string)null);
                 });
 
             modelBuilder.Entity("backendcCTRL.Models.Appointment", b =>

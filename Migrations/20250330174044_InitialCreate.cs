@@ -13,10 +13,11 @@ namespace backendcCTRL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "user",
+                name: "app_user",
                 columns: table => new
                 {
-                    userid = table.Column<int>(type: "integer", nullable: false),
+                    userid = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     password = table.Column<string>(type: "text", nullable: false),
@@ -25,14 +26,15 @@ namespace backendcCTRL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_user", x => x.userid);
+                    table.PrimaryKey("PK_app_user", x => x.userid);
                 });
 
             migrationBuilder.CreateTable(
                 name: "patient",
                 columns: table => new
                 {
-                    patientid = table.Column<int>(type: "integer", nullable: false),
+                    patientid = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     userid = table.Column<int>(type: "integer", nullable: false),
                     fullname = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     dateofbirth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -43,9 +45,9 @@ namespace backendcCTRL.Migrations
                 {
                     table.PrimaryKey("PK_patient", x => x.patientid);
                     table.ForeignKey(
-                        name: "FK_patient_user_userid",
+                        name: "FK_patient_app_user_userid",
                         column: x => x.userid,
-                        principalTable: "user",
+                        principalTable: "app_user",
                         principalColumn: "userid",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -124,7 +126,7 @@ namespace backendcCTRL.Migrations
                 name: "patient");
 
             migrationBuilder.DropTable(
-                name: "user");
+                name: "app_user");
         }
     }
 }
