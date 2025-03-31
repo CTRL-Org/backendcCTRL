@@ -19,14 +19,14 @@ namespace backendcCTRL.Services
             return _context.HealthStats.Include(h => h.Patient).ToList();
         }
 
-        public HealthStats? GetHealthStats(int id)
+        public HealthStats? GetHealthStatsById(int id)
         {
             return _context.HealthStats
                 .Include(h => h.Patient)
                 .FirstOrDefault(h => h.StatID == id);
         }
 
-        public HealthStats? GetHealthStatsByPatient(int patientId)
+        public HealthStats? GetHealthStatsByPatientId(int patientId)
         {
             return _context.HealthStats
                 .Include(h => h.Patient)

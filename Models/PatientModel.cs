@@ -10,32 +10,31 @@ namespace backendcCTRL.Models
     {
         [Key]
         [Column("patientid")]
-        public int PatientID { get; set; }  // ✅ Change from long to int
+        public int? PatientID { get; set; }  // Made nullable for testing
 
         [Column("userid")]
-        public int UserID { get; set; }  // ✅ Change from long to int
+        public int? UserID { get; set; }  
 
         [ForeignKey("UserID")]
-        public User User { get; set; } = null!;
+        public User? User { get; set; }  
 
         [StringLength(100)]
         [Column("fullname")]
-        public string FullName { get; set; } = null!;
+        public string? FullName { get; set; }  
 
         [Column("dateofbirth")]
-        public DateTime DateOfBirth { get; set; }  // ✅ Reverted from DateOnly to DateTime
+        public DateTime? DateOfBirth { get; set; }  
 
         [StringLength(10)]
         [Column("gender")]
-        public string Gender { get; set; } = null!;
+        public string? Gender { get; set; }  // Made nullable for testing
 
         [StringLength(20)]
         [Column("idnumber")]
-        public string IDNumber { get; set; } = null!;
+        public string? IDNumber { get; set; }  // Made nullable for testing
 
         // Navigation properties
-        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
-        public ICollection<HealthStats> HealthStats { get; set; } = new List<HealthStats>();
+        public ICollection<Appointment>? Appointments { get; set; } = new List<Appointment>();
+        public ICollection<HealthStats>? HealthStats { get; set; } = new List<HealthStats>();
     }
-
 }

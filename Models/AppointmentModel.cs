@@ -12,7 +12,7 @@ namespace backendcCTRL.Models
 
         [Required]
         [Column("patientid")]
-        public int PatientID { get; set; }
+        public int? PatientID { get; set; }
 
         [ForeignKey("PatientID")]
         public Patient? Patient { get; set; }

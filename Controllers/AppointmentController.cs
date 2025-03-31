@@ -53,7 +53,7 @@ namespace backendcCTRL.Controllers
 
         // POST: api/Appointment
         [HttpPost]
-        public IActionResult CreateAppointment([FromBody] Appointment appointment)
+        public IActionResult CreateAppointment([FromBody] CreateAppointmentDTO appointmentDto)
         {
             if (!ModelState.IsValid)
             {
@@ -62,6 +62,14 @@ namespace backendcCTRL.Controllers
 
             try
             {
+                // Map the DTO to the Appointment model
+                var appointment = new Appointment
+                {
+                    PatientID = appointmentDto.PatientID,
+                    DateTime = appointmentDto.DateTime,
+                    Reason = appointmentDto.Reason
+                };
+
                 var createdAppointment = _appointmentService.CreateAppointment(appointment);
                 _logger.LogInformation($"Created appointment with ID: {createdAppointment.AppointmentID}");
                 return CreatedAtAction(nameof(GetAppointmentById), new { id = createdAppointment.AppointmentID }, createdAppointment);

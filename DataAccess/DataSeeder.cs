@@ -42,7 +42,7 @@ public class DataSeeder
 
                 var appointment = new Appointment 
                 { 
-                    PatientID = patient.PatientID,
+                    PatientID = patient.PatientID ?? 0, // Provide a default value
                     DateTime = DateTime.UtcNow.AddDays(1), 
                     Reason = "General Checkup", 
                     Status = "Scheduled" 
@@ -53,7 +53,7 @@ public class DataSeeder
 
                 var healthStats = new HealthStats
                 {
-                    PatientID = patient.PatientID,
+                    PatientID = patient.PatientID ?? throw new InvalidOperationException("PatientID cannot be null"), // Throw exception if null
                     Height = 180,
                     Weight = 75,
                     BloodType = "A+",
