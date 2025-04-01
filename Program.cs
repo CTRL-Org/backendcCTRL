@@ -51,7 +51,7 @@ try
         
         Console.WriteLine($"Before seeding - Users: {userCount}, Patients: {patientCount}, Appointments: {appointmentCount}");
         
-        if (userCount == 0)
+        if (userCount == 0 || patientCount == 0 || appointmentCount == 0)
         {
             Console.WriteLine("Starting data seeding...");
             DataSeeder.Seed(dbContext);
