@@ -33,6 +33,34 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+// If --seed is passed as an argument, run the seeder and exit
+if (args.Length > 1 && args[1] == "--seed")
+{
+    try
+    {
+        using (var scope = app.Services.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            
+            // Ensure database exists
+            Console.WriteLine("Ensuring database is created...");
+            dbContext.Database.EnsureCreated();
+
+            // Run the seeder
+            DataSeeder.Seed(dbContext);
+        }
+        
+        Console.WriteLine("\nData seeding completed successfully!");
+        return;
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error during seeding: {ex.Message}");
+        Console.WriteLine($"Stack trace: {ex.StackTrace}");
+        throw;
+    }
+}
+
 // Call seeder for data
 try
 {

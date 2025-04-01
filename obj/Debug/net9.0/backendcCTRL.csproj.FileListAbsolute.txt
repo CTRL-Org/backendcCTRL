@@ -338,3 +338,6 @@ C:\Users\tmahlo\backEnd\backendcCTRL\obj\Debug\net9.0\refint\backendcCTRL.dll
 C:\Users\tmahlo\backEnd\backendcCTRL\obj\Debug\net9.0\backendcCTRL.pdb
 C:\Users\tmahlo\backEnd\backendcCTRL\obj\Debug\net9.0\backendcCTRL.genruntimeconfig.cache
 C:\Users\tmahlo\backEnd\backendcCTRL\obj\Debug\net9.0\ref\backendcCTRL.dll
+C:\Users\tmahlo\backEnd\backendcCTRL\bin\Debug\net9.0\DataSeederRunner\appsettings.json
+C:\Users\tmahlo\backEnd\backendcCTRL\bin\Debug\net9.0\DataSeederRunner\obj\DataSeederRunner.csproj.nuget.dgspec.json
+C:\Users\tmahlo\backEnd\backendcCTRL\bin\Debug\net9.0\DataSeederRunner\obj\project.assets.json

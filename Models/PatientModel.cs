@@ -23,7 +23,7 @@ namespace backendcCTRL.Models
         public string? FullName { get; set; }  
 
         [Column("dateofbirth")]
-        public DateTime? DateOfBirth { get; set; }  
+        public DateTime DateOfBirth { get; set; } = DateTime.UtcNow; // Default to UTC
 
         [StringLength(10)]
         [Column("gender")]

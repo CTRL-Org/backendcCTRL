@@ -12,15 +12,18 @@ public class DataSeeder
         try
         {
             Console.WriteLine("Starting data seeding process...");
-            
-            if (!context.Users.Any())  // To Avoid duplicate seeding
+
+            // Check if any of the tables are empty
+            bool shouldSeed = !context.Users.Any() || !context.Patients.Any() || !context.Appointments.Any();
+
+            if (shouldSeed)
             {
-                Console.WriteLine("No existing users found, proceeding with seeding...");
-                
-                var user = new User 
-                { 
-                    Username = "testuser", 
-                    Email = "test@example.com", 
+                Console.WriteLine("No existing data found, proceeding with seeding...");
+
+                var user = new User
+                {
+                    Username = "testuser",
+                    Email = "test@example.com",
                     Password = "hashedpassword",
                     Role = "Admin"
                 };
@@ -28,24 +31,24 @@ public class DataSeeder
                 context.SaveChanges();
                 Console.WriteLine($"Created user with ID: {user.UserID}");
 
-                var patient = new Patient 
-                { 
-                    FullName = "John Doe", 
-                    DateOfBirth = new DateTime(1990, 5, 20), 
-                    Gender = "Male", 
-                    IDNumber = "9005201234567", 
-                    UserID = user.UserID  
+                var patient = new Patient
+                {
+                    FullName = "John Doe",
+                    DateOfBirth = new DateTime(1990, 5, 20).ToUniversalTime(), // Ensure UTC
+                    Gender = "Male",
+                    IDNumber = "9005201234567",
+                    UserID = user.UserID
                 };
                 context.Patients.Add(patient);
                 context.SaveChanges();
                 Console.WriteLine($"Created patient with ID: {patient.PatientID}");
 
-                var appointment = new Appointment 
-                { 
-                    PatientID = patient.PatientID ?? 0, // Provide a default value
-                    DateTime = DateTime.UtcNow.AddDays(1), 
-                    Reason = "General Checkup", 
-                    Status = "Scheduled" 
+                var appointment = new Appointment
+                {
+                    PatientID = patient.PatientID ?? 0,
+                    DateTime = DateTime.UtcNow.AddDays(1),
+                    Reason = "General Checkup",
+                    Status = "Scheduled"
                 };
                 context.Appointments.Add(appointment);
                 context.SaveChanges();
@@ -53,7 +56,7 @@ public class DataSeeder
 
                 var healthStats = new HealthStats
                 {
-                    PatientID = patient.PatientID ?? throw new InvalidOperationException("PatientID cannot be null"), // Throw exception if null
+                    PatientID = patient.PatientID ?? throw new InvalidOperationException("PatientID cannot be null"),
                     Height = 180,
                     Weight = 75,
                     BloodType = "A+",
