@@ -62,16 +62,33 @@ if (args.Length > 1 && args[1] == "--seed")
 }
 
 // Call seeder for data
+// Ensure database is created and seeded
 try
 {
     using (var scope = app.Services.CreateScope())
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         
-        // Ensure database exists and tables are created
-        Console.WriteLine("Ensuring database is created...");
-        dbContext.Database.EnsureCreated();
-        
+        // Retry logic to handle database connection issues
+        var retryCount = 5;
+        var delay = 5000; // 5 seconds
+
+        for (int i = 0; i < retryCount; i++)
+        {
+            try
+            {
+                Console.WriteLine("Ensuring database is created...");
+                dbContext.Database.EnsureCreated();
+                break; // Exit the loop if successful
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Attempt {i + 1}: Failed to connect to the database. Retrying in {delay / 1000} seconds...");
+                Console.WriteLine($"Error: {ex.Message}");
+                Thread.Sleep(delay);
+            }
+        }
+
         // Check tables before seeding
         var userCount = dbContext.Users.Count();
         var patientCount = dbContext.Patients.Count();
@@ -90,25 +107,6 @@ try
             appointmentCount = dbContext.Appointments.Count();
             
             Console.WriteLine($"After seeding - Users: {userCount}, Patients: {patientCount}, Appointments: {appointmentCount}");
-            
-            // Try to fetch and display the actual data
-            var users = dbContext.Users.ToList();
-            var patients = dbContext.Patients.ToList();
-            var appointments = dbContext.Appointments.ToList();
-            
-            Console.WriteLine("\nSeeded Data Details:");
-            foreach (var user in users)
-            {
-                Console.WriteLine($"User: ID={user.UserID}, Username={user.Username}");
-            }
-            foreach (var patient in patients)
-            {
-                Console.WriteLine($"Patient: ID={patient.PatientID}, Name={patient.FullName}, UserID={patient.UserID}");
-            }
-            foreach (var appt in appointments)
-            {
-                Console.WriteLine($"Appointment: ID={appt.AppointmentID}, PatientID={appt.PatientID}, DateTime={appt.DateTime}");
-            }
         }
         else
         {
@@ -122,7 +120,6 @@ catch (Exception ex)
     Console.WriteLine($"Stack trace: {ex.StackTrace}");
     return;
 }
-
 // Configure HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
@@ -134,4 +131,4 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-app.Run();
+app.Run("http://*:80");

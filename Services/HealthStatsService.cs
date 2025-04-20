@@ -1,7 +1,7 @@
-using backendcCTRL.DataAccess;  
+using Microsoft.EntityFrameworkCore;
+using backendcCTRL.DataAccess;
 using backendcCTRL.Models;
 using backendcCTRL.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace backendcCTRL.Services
 {
@@ -21,22 +21,24 @@ namespace backendcCTRL.Services
 
         public HealthStats? GetHealthStatsById(int id)
         {
-            return _context.HealthStats
+            return _context
+                .HealthStats
                 .Include(h => h.Patient)
                 .FirstOrDefault(h => h.StatID == id);
         }
 
         public HealthStats? GetHealthStatsByPatientId(int patientId)
         {
-            return _context.HealthStats
+            return _context
+                .HealthStats
                 .Include(h => h.Patient)
                 .FirstOrDefault(h => h.PatientID == patientId);
         }
 
         public HealthStats CreateHealthStats(HealthStats healthStats)
         {
-            healthStats.LastUpdated = DateTime.UtcNow;
-            _context.HealthStats.Add(healthStats);
+            healthStats.Timestamp = DateTime.UtcNow;
+            _context.HealthStats.Add (healthStats);
             _context.SaveChanges();
             return healthStats;
         }
@@ -44,14 +46,11 @@ namespace backendcCTRL.Services
         public HealthStats? UpdateHealthStats(HealthStats healthStats)
         {
             var existingStats = _context.HealthStats.Find(healthStats.StatID);
-            if (existingStats == null)
-                return null;
+            if (existingStats == null) return null;
 
-            existingStats.Height = healthStats.Height;
-            existingStats.Weight = healthStats.Weight;
-            existingStats.BloodType = healthStats.BloodType;
-            existingStats.Allergies = healthStats.Allergies;
-            existingStats.LastUpdated = DateTime.UtcNow;
+            existingStats.DataType = healthStats.DataType;
+            existingStats.Value = healthStats.Value;
+            existingStats.Timestamp = DateTime.UtcNow;
 
             _context.SaveChanges();
             return existingStats;
@@ -60,10 +59,9 @@ namespace backendcCTRL.Services
         public bool DeleteHealthStats(int id)
         {
             var healthStats = _context.HealthStats.Find(id);
-            if (healthStats == null)
-                return false;
+            if (healthStats == null) return false;
 
-            _context.HealthStats.Remove(healthStats);
+            _context.HealthStats.Remove (healthStats);
             _context.SaveChanges();
             return true;
         }

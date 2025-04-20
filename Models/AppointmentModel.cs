@@ -11,6 +11,10 @@ namespace backendcCTRL.Models
         public int AppointmentID { get; set; }
 
         [Required]
+        [Column("Provider")]
+        public int ProviderID { get; set; }
+        public Provider Provider { get; set; }
+        [Required]
         [Column("patientid")]
         public int? PatientID { get; set; }
 
