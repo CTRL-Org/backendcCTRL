@@ -12,8 +12,8 @@ using backendcCTRL.DataAccess;
 namespace backendcCTRL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250330181115_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250420114614_UpdateHealthStatsModel")]
+    partial class UpdateHealthStatsModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,6 +45,10 @@ namespace backendcCTRL.Migrations
                     b.Property<int?>("PatientID1")
                         .HasColumnType("integer");
 
+                    b.Property<int>("ProviderID")
+                        .HasColumnType("integer")
+                        .HasColumnName("Provider");
+
                     b.Property<string>("Reason")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -63,46 +67,63 @@ namespace backendcCTRL.Migrations
 
                     b.HasIndex("PatientID1");
 
-                    b.ToTable("appointment", (string)null);
+                    b.HasIndex("ProviderID");
+
+                    b.ToTable("Appointment", (string)null);
+                });
+
+            modelBuilder.Entity("backendcCTRL.Models.GlobalHealthStats", b =>
+                {
+                    b.Property<int>("StatID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StatID"));
+
+                    b.Property<string>("DataType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Region")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("StatID");
+
+                    b.ToTable("GlobalHealthStats", (string)null);
                 });
 
             modelBuilder.Entity("backendcCTRL.Models.HealthStats", b =>
                 {
                     b.Property<int>("StatID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("statid");
+                        .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StatID"));
 
-                    b.Property<string>("Allergies")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("allergies");
-
-                    b.Property<string>("BloodType")
-                        .HasMaxLength(5)
-                        .HasColumnType("character varying(5)")
-                        .HasColumnName("bloodtype");
-
-                    b.Property<decimal?>("Height")
-                        .HasColumnType("numeric")
-                        .HasColumnName("height");
-
-                    b.Property<DateTime>("LastUpdated")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("lastupdated");
+                    b.Property<string>("DataType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("PatientID")
-                        .HasColumnType("integer")
-                        .HasColumnName("patientid");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("PatientID1")
                         .HasColumnType("integer");
 
-                    b.Property<decimal?>("Weight")
-                        .HasColumnType("numeric")
-                        .HasColumnName("weight");
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("StatID");
 
@@ -110,7 +131,7 @@ namespace backendcCTRL.Migrations
 
                     b.HasIndex("PatientID1");
 
-                    b.ToTable("healthstats", (string)null);
+                    b.ToTable("HealthStats", (string)null);
                 });
 
             modelBuilder.Entity("backendcCTRL.Models.Patient", b =>
@@ -127,24 +148,21 @@ namespace backendcCTRL.Migrations
                         .HasColumnName("dateofbirth");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("fullname");
 
                     b.Property<string>("Gender")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("character varying(10)")
                         .HasColumnName("gender");
 
                     b.Property<string>("IDNumber")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)")
                         .HasColumnName("idnumber");
 
-                    b.Property<int>("UserID")
+                    b.Property<int?>("UserID")
                         .HasColumnType("integer")
                         .HasColumnName("userid");
 
@@ -153,13 +171,96 @@ namespace backendcCTRL.Migrations
 
                     b.HasKey("PatientID");
 
-                    b.HasIndex("UserID")
-                        .IsUnique();
+                    b.HasIndex("UserID");
 
                     b.HasIndex("UserID1")
                         .IsUnique();
 
-                    b.ToTable("patient", (string)null);
+                    b.ToTable("Patient", (string)null);
+                });
+
+            modelBuilder.Entity("backendcCTRL.Models.Provider", b =>
+                {
+                    b.Property<int>("ProviderID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ProviderID"));
+
+                    b.Property<string>("LicenseNumber")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Speciality")
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ProviderID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Provider", (string)null);
+                });
+
+            modelBuilder.Entity("backendcCTRL.Models.Staff", b =>
+                {
+                    b.Property<int>("StaffID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StaffID"));
+
+                    b.Property<string>("Department")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("text");
+
+                    b.Property<string>("IDNumber")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProviderID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("integer");
+
+                    b.HasKey("StaffID");
+
+                    b.HasIndex("ProviderID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Staff", (string)null);
+                });
+
+            modelBuilder.Entity("backendcCTRL.Models.SymptomsLog", b =>
+                {
+                    b.Property<int>("LogID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LogID"));
+
+                    b.Property<string>("AIResponse")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("PatientID")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Symptoms")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("LogID");
+
+                    b.HasIndex("PatientID");
+
+                    b.ToTable("SymptomsLog", (string)null);
                 });
 
             modelBuilder.Entity("backendcCTRL.Models.User", b =>
@@ -172,13 +273,11 @@ namespace backendcCTRL.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserID"));
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("email");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("password");
 
@@ -188,20 +287,18 @@ namespace backendcCTRL.Migrations
                         .HasColumnName("phonenumber");
 
                     b.Property<string>("Role")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)")
                         .HasColumnName("role");
 
                     b.Property<string>("Username")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
                         .HasColumnName("username");
 
                     b.HasKey("UserID");
 
-                    b.ToTable("app_user", (string)null);
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("backendcCTRL.Models.Appointment", b =>
@@ -216,7 +313,15 @@ namespace backendcCTRL.Migrations
                         .WithMany("Appointments")
                         .HasForeignKey("PatientID1");
 
+                    b.HasOne("backendcCTRL.Models.Provider", "Provider")
+                        .WithMany()
+                        .HasForeignKey("ProviderID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Patient");
+
+                    b.Navigation("Provider");
                 });
 
             modelBuilder.Entity("backendcCTRL.Models.HealthStats", b =>
@@ -237,10 +342,9 @@ namespace backendcCTRL.Migrations
             modelBuilder.Entity("backendcCTRL.Models.Patient", b =>
                 {
                     b.HasOne("backendcCTRL.Models.User", "User")
-                        .WithOne()
-                        .HasForeignKey("backendcCTRL.Models.Patient", "UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("backendcCTRL.Models.User", null)
                         .WithOne("Patient")
@@ -249,11 +353,57 @@ namespace backendcCTRL.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("backendcCTRL.Models.Provider", b =>
+                {
+                    b.HasOne("backendcCTRL.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("backendcCTRL.Models.Staff", b =>
+                {
+                    b.HasOne("backendcCTRL.Models.Provider", "Provider")
+                        .WithMany("Staff")
+                        .HasForeignKey("ProviderID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("backendcCTRL.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Provider");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("backendcCTRL.Models.SymptomsLog", b =>
+                {
+                    b.HasOne("backendcCTRL.Models.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
             modelBuilder.Entity("backendcCTRL.Models.Patient", b =>
                 {
                     b.Navigation("Appointments");
 
                     b.Navigation("HealthStats");
+                });
+
+            modelBuilder.Entity("backendcCTRL.Models.Provider", b =>
+                {
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("backendcCTRL.Models.User", b =>
